@@ -1,6 +1,4 @@
 ---
-# Research into CICD principles and proposal of 
-# alternatives based on methods used in the FOSS community.
 # The build requires the following dependencies:
 #    TeXLive
 #    pandoc 

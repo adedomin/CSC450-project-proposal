@@ -108,3 +108,16 @@ I feel with all these experiences I am more than capable of building a simple la
 4. Expected Outcome
 ===================
 
+The Expected outcome is a fully functioning shell which supports powerful and modern data structures and objects.
+Features I hope to have:
+
+  * shell that can execute processes
+  * supports basic shell IPC like pipes
+  * adds extra features like event handlers
+  * json -> native hashmap
+  * native hashmap -> json
+  * library framework to allow devs to make there own parsers for POSIX tools.
+  * inline javascript using javascript template literals.
+  * HEREDOCS using javascript template literals
+
+Combined with this, The project should result in a article and presentation which describes in great detail how the shell works, what it solves and other findings.
