@@ -30,7 +30,6 @@ header-includes:
 link-citations: Yes
 references:
 - title: 'Caml-Shcaml: An OCaml Library for UNIX Shell Programming'
-  URL: http://dx.doi.org/10.1145/1411304.1411316
   DOI: 10.1145/1411304.1411316
   publisher: ACM
   author:
@@ -44,7 +43,6 @@ references:
     year: 2008
 
 - title: A LISP SHELL
-  URL: http://dx.doi.org/10.1145/947639.947642
   DOI: 10.1145/947639.947642
   publisher: ACM
   author:
@@ -65,4 +63,18 @@ references:
   type: article-journal
   issued:
     year: 1994
+
+- title: 'Staged parser combinators for efficient data processing'
+  DOI: 10.1145/2660193.2660241
+  publisher: ACM OOPSLA
+  author:
+  - family: Jonnalagedda
+    given: Manohar
+  - family: Coppey
+    given: Thierry 
+  - family: et al.
+  id: parsecomb
+  type: article-journal
+  issued:
+    year: 2014
 ---

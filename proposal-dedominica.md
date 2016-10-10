@@ -14,6 +14,12 @@ For instance, many of GNU's coreutils, such as their implementation of grep and 
 Different Operating systems, ranging from GNU-based Linux distributions to non-free systems like macOS and OS X use different coreutils.
 Thus, this means that shells scripts can depend on behaviors and unstructured output that aren't portable.
 
+The modern web and service oriented architectures are built on the transactions of structured documents like JSON.
+Currently, shells do not offer performant or efficient ways of handling these data structures.
+For instance, every time one would need to pull a value from a json object, it would have to be parsed by a shell tool like jq, each time.
+However many other scripting languages like python, perl and javascript offer such facilities
+For the shell to have utility in a modern cloud oriented future, it should be built to natively handle this data.
+
 1.1. Other Attempts
 -------------------
 
@@ -62,7 +68,7 @@ Generally errors aren't caught here, other than invalid identifier names.
 The key of this step is to take emitted tokens from the lexical analyser and to check them against a set of rules.
 Depending on the parser style depends on the kind of and quality of errors.
 In many cases, most users use domain specific languages like GNU bison or YACC to generate the logic behind their grammars.
-The other ways to build a parser is to do a recursive decent parser or a functional combinators composed of parsers.
+Without such a DSL, developers are forced to make recursive decent parser or create parser combinators [@parsecomb].
 
 The second phase of this is to apply grammars to actions. 
 Actions are basically the logic to apply when a grammar matches.
@@ -78,13 +84,13 @@ This is the area where optimizers will run, such as null code path trimming.
 ----------------
 
 Due to the dynamic nature of a shell, it only make sense that the new language be interpreted.
-This is where the problem can get a bit more complex.
+Interpreters are generally slower than compiled, or just-in-time compiled.
+Since shells are usually line-by-line oriented, it's a challenge to have a dynamic, JIT compiler; by the time it kicks in, it would be too late and the next instruction would have been loaded.
 
 ### 2.4.1. Planning & Implementation
 
 General software engineering practices like diagramming should be employed to ensure a clear and concise understanding and modelling of the system.
-Another helpful task is to 
-This phase is to determine what languages I want to use to implement all of the above.
+Another helpful task is to clearly state the features expected and a general, high level description of how they should work.
 
 2.5. Timeline
 -------------
