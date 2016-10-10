@@ -5,58 +5,67 @@ Shells are the primary interface into a POSIX system.
 As a result, many tools and utilities rely on shells to handle and process files and their data.
 However, shells have one strong limitation in them;
 the data they work with is not strongly structured.
-As a result, sysadmins and programmers make use of confusing and massive awk scripts and shell pipelines to derive valuable information.
-Even variables like \$IFS can completely alter how this byte[] stream is parsed.
+As a result, sysadmins and programmers make use of confusing and massive awk scripts and shell pipelines to derive valuable information or to make decisions.
+Even variables like \$IFS can completely alter how these byte[] streams are handled.
 
 If any changes were to occur in coreutils, it could break numerous tools and scripts.
 Even using different coreutils can lead to issues.
 For instance, many of GNU's coreutils, such as their implementation of grep and df, add features not strictly standardized by POSIX.
-scripts and other shell invoked utilities make use of what can best be described as, named parameters.
-These named parameters, known as arguments, can be hard to remember using short, single letter identifiers.
+Different Operating systems, ranging from GNU-based Linux distributions to non-free systems like macOS and OS X use different coreutils.
+Thus, this means that shells scripts can depend on behaviors and unstructured output that aren't portable.
 
 1.1. Other Attempts
 -------------------
 
-an OCaml library called shcaml added a functional composer called shtreams which allows for transforming byte streams into structured documents [@shcaml].
+An OCaml library called shcaml added a functional composer called shtreams which allows for transforming byte streams into structured documents [@shcaml].
 Some developers have tried to add other structures to shell input, such as Scheme Shell and other implementations [@lispsh].
-They aimed to bring S-Expression syntax to shells. Ideally to add closure property and variadic expressivness.
-It also helps with metaprogramming, since it allows one to develop Domain specific languages and high order functions to abstract away certain logic.
-Where they fall short is they don't solve the core issues of shells, which is they don't structure data [@shcaml].
+They aimed to bring S-Expression syntax to shells. Ideally to add stronger functional properties and variadic expressiveness.
+It also helps with meta-programming, since it allows one to develop Domain specific languages using high order functional composition.
+At the end of the day, both attempts introduced systemic performance issues or failed to solve core problems, such as parsing general POSIX tools.
 
-An older attempt to address some of these problems was using filesystem abstractions to mimic object oriented principles [@oosh]. They would spawn named pipes and shell scripts to mimic sending and retrieving values and results. This ultimately missed the point since it still relies on the same data structure problem. it also requires numerous, though not busy, while loops which consumes threads.
+An older attempt to address some of these problems was using file system abstractions to mimic object oriented principles [@oosh].
+They would spawn named pipes and shell scripts to mimic sending and retrieving values and results.
+This ultimately missed the point since it still relies on the same lack of native data structure support.
+It also had massive performance issues, since misused named pipes are slow.
+
 
 1.2. Objective
 --------------
 
 Ultimately I want to take what has been learned and make a completely modern shell.
 A shell that has the concepts of clean, true objects.
-A shell that has mechanisms to structure data streams so they can be easiliy accessed using simple dot notation.
-A shell that supports modern data structures like hashmaps and structured documents like JSON, YAML, XML, TOML and various others.
+A shell that has mechanisms to structure data streams so they can be easily accessed using simple dot notation.
+A shell that supports modern data structures like hash maps and structured documents like JSON, YAML, XML, TOML and various others.
+For all features and goals, see section 4
 
 2. Methodology
 ==============
 
-Ultimately the goal is to build, not onlt a new shell, but basically an entire langauge.
+The goal is to build, not only a new shell, but basically an entire language.
 To do this is a multilevel step.
-In most cases its usually, build a lexical analyser, a parser which generates an abstract syntax tree and some kind of interpreter or compiler or virtual machine to execute that abstract syntax tree.
+In most cases it's usually a process of:
+
+  * building a lexical analyser
+  * a parser which generates an abstract syntax tree
+  * some kind of interpreter or compiler or virtual machine to execute that abstract syntax tree.
 
 2.1. Lexical Analysis
 ---------------------
 
-This is general the first step of building a new language.
-The key of this step is to take strings and to add a token identifier to them.
-generally errors aren't caught here, other than invalid identifier names.
+This is generally the first step of building a new language.
+The key of this step is to take a documents  and to add a token identifier to split up, individual strings.
+Generally errors aren't caught here, other than invalid identifier names.
 
 2.2. Grammars (and Actions)
 ---------------------------
 
 The key of this step is to take emitted tokens from the lexical analyser and to check them against a set of rules.
 Depending on the parser style depends on the kind of and quality of errors.
-In many cases, most users use domain specific languages like GNU bison or YACC to generate the logic behind their grammars for them.
+In many cases, most users use domain specific languages like GNU bison or YACC to generate the logic behind their grammars.
 The other ways to build a parser is to do a recursive decent parser or a functional combinators composed of parsers.
 
 The second phase of this is to apply grammars to actions. 
-Actions are basically the logic to apply when a grammer matches.
+Actions are basically the logic to apply when a grammar matches.
 In this case, the actions could be interpreter actions or in most cases, building an abstract syntax tree.
 
 2.3. Abstract Syntax Tree
@@ -73,7 +82,8 @@ This is where the problem can get a bit more complex.
 
 ### 2.4.1. Planning & Implementation
 
-General software engineering practices like diagraming should be employed to ensure a clear and concise understanding and modelling of the system.
+General software engineering practices like diagramming should be employed to ensure a clear and concise understanding and modelling of the system.
+Another helpful task is to 
 This phase is to determine what languages I want to use to implement all of the above.
 
 2.5. Timeline
