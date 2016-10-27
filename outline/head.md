@@ -1,3 +1,4 @@
+
 ---
 # Copyright (C) 2016 Anthony DeDominic
 #
@@ -161,4 +162,26 @@ references:
     month: Aug
     year: 2002
   id: monadshell
+
+- title: Service-oriented architecture 
+  DOI: 10.1109/SAINTW.2003.1210138
+  publisher: IEEE
+  author:
+  - family: Perrey 
+  - family: Lycett
+  issued:
+    month: Jan
+    year: 2003
+  id: soa
+
+- title: A Systematic Approach to Domain-Specific Language Design Using UML 
+  publisher: IEEE
+  DOI: 10.1109/ISORC.2007.10
+  author:
+  - family: Selic
+    given: Bran
+  issued:
+    month: May
+    year: 2007 
+  id: dsldes
 ---
