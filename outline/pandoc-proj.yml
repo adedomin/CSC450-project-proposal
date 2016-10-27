@@ -10,5 +10,5 @@ filters:
   - pandoc-citeproc
 buildOpts:
   - '--self-contained'
-    #  - '--csl'
-    #  - 'pandoc_modules/styles/ieee-with-url.csl'
+  - '--csl'
+  - './ieee-with-url-and-doi.csl'
