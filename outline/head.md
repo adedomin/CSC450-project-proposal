@@ -16,7 +16,10 @@
 title: Literature Review + Outline: Object Shells
 #author: Anthony DeDominic
 abstract: |
-    *nothing yet*
+    *This is merely the background on my subject, tying together research garnered over the weeks.*
+    *Below I will discuss the importance of a shell with modern data structures and object like constructs*
+    *I will also discuss problems that are being solved with such shells.*
+    *I will also talk about processes that will be used in my project.*
 
 papersize: letter
 geometry: margin=2cm
@@ -119,4 +122,27 @@ references:
   - family: Nilsson
     given: Jens
   id: maltparse
+
+- title: Understanding SOA with Web services
+  author:
+  - family: Newcomer
+    given: Eric 
+  - family: Lomow
+    given: Greg
+  issued: 
+    year: 2005
+  publisher: Addison-Wesley
+  id: understandsoa
+
+- title: 'Bridging the semantic Web and Web 2.0 with representational state transfer (REST)'
+  DOI: 10.1016/j.websem.2007.11.002
+  author: 
+  - family: Battle
+    given: Robert 
+  - family: Benson
+    given: Edward
+  issued: 
+    year: 2008
+  publisher: Elsevier
+  id: semanticrest
 ---

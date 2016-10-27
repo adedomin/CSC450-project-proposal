@@ -1,0 +1,14 @@
+name: litrev-out-dedominica
+type: pdf
+source_files:
+  - head.md
+  - litrev.md
+  - tail.md
+depends: []
+    #  - 'https://github.com/citation-style-language/styles'
+filters:
+  - pandoc-citeproc
+buildOpts:
+  - '--self-contained'
+    #  - '--csl'
+    #  - 'pandoc_modules/styles/ieee-with-url.csl'
