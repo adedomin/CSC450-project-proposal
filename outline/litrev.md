@@ -48,14 +48,13 @@ these combinators allowed for slipping in native ocaml code and objects.
 As a result these code pieces could be parsers, that could take known shell commands, and structure their data into key-value trees [@shcaml].
 
 Purely object oriented attempts ultimately result in new instances of bash and explicit message passing with named pipes [@oosh].
+Enen though offers powerful object-like abstractions it general comes with significant overhead.
+It also incurs security risks since processes can write and listen to the object named pipes.
 
 Projects like powershell are built on the .NET runtime and can thus utilize class like features and functions.
 The streaming pipelines in Powershell are merely .NET classes which allow for some structural correctness and parsing [@shcaml][@monadshell].
 As a result, Microsoft prefers to call more than just a shell, but a whole "automation and configuration management framework."
 One that is capable of handling structured data such as JSON, XML, CSV, etc, REST APIs, and object models.
-As a result, Microsoft prefers to call more than just a shell, but a whole "automation and configuration management framework."
-One that is capable of handling structured data such as JSON, XML, CSV, etc, REST APIs, and object models.
-As a result, the conventional UNIX shell is becoming marginalized by various general purpose languages and domain specific languages.
 
 Tools like Ansible, aren't quite shells, but are domain specific languages which solve similar problems.
 Ansible, et al, use code generation and a yaml playbook file to construct python code;
