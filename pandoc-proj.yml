@@ -1,14 +1,9 @@
-name: proposal-dedominica
+name: bio
 type: pdf
 source_files:
   - head.md
-  - proposal-dedominica.md
-  - tail.md
-depends:
-  - 'https://github.com/citation-style-language/styles'
-filters:
-  - pandoc-citeproc
+  - bio.md
+depends: []
+filters: []
 buildOpts:
   - '--self-contained'
-    #  - '--csl'
-    #  - 'pandoc_modules/styles/ieee-with-url.csl'
