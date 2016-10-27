@@ -9,11 +9,23 @@
 # Free Documentation License".
 ---
 
-1. Background
-=============
+1. Introduction
+===============
 
 1.1 Related Works
 -----------------
+
+Object Oriented shells isn't an etirely new concept.
+As others have shown, many projects, some more serious than others, attempted to solve this issue [@shcaml] [@oosh].
+
+The power of shells is well understood.
+Most programming languages have some kind of system() or shell invocation mechanism.
+Some, such as the developers of shcaml attempted to take it further by including functional combinators;
+these combinators allowed for slipping in native ocaml code and objects.
+As a result these code pieces could be parsers, that could take known shell commands, and structure their data into key-value trees [@shcaml].
+
+Purely object oriented attempts ultimately result in new instances of bash and explicit message passing with named pipes [@oosh].
+
 
 1.1 SOA
 -------
@@ -31,6 +43,11 @@ What results is some sort of string tokenized parser.
 
 In order to unify the web and systems management, tools like ansible were created.
 Ansible, ends up using a general purpose language like python which can natively handle these structures.
+Projects like powershell are built on the .NET runtime and can thus utilize class like features and functions.
+The streaming pipelines in Powershell are merely .NET classes which allow for some structural correctness and parsing [@monadshell].
+As a result, Microsoft prefers to call more than just a shell, but a whole "automation and configuration management framework."
+One that is capable of handling structured data such as JSON, XML, CSV, etc, REST APIs, and object models.
+As a result, the conventional UNIX shell is becoming marginalized by various general purpose languages and domain specific languages.
 
 1.2 Process
 -----------

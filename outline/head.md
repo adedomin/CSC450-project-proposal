@@ -32,7 +32,7 @@ header-includes:
 - \fancyfoot[L]{DeDominic - Lit Rev}
 - \fancyfoot[C]{CSC450 01 - \the\year}
 - \fancyfoot[R]{\thepage}
-- \twocolumn
+#- \twocolumn
 - \author{DeDominic, Anthony\\Eastern Connecticut State University\\Willimantic, USA\\dedominica@my.easternct.edu}
 
 link-citations: Yes
@@ -150,4 +150,15 @@ references:
     year: 2008
   publisher: Elsevier
   id: semanticrest
+
+- title: Monad Manifesto
+  URL: http://www.jsnover.com/Docs/MonadManifesto.pdf
+  publisher: Microsoft
+  author:
+  - family: Snover
+    given: Jeffrey
+  issued:
+    month: Aug
+    year: 2002
+  id: monadshell
 ---
