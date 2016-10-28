@@ -14,7 +14,7 @@
 #    pandoc 
 #    pandoc-citeproc
 
-title: "Literature Review + Outline: Object Shells"
+title: "Literature Review + Outline - jcom: A JavaScript Object Shell"
 #author: Anthony DeDominic
 abstract: |
     *This is merely the background on my subject, tying together research garnered over the weeks.*
@@ -40,7 +40,6 @@ link-citations: Yes
 references:
 - title: 'Caml-Shcaml: An OCaml Library for UNIX Shell Programming'
   DOI: 10.1145/1411304.1411316
-#  URL: http://dx.doi.org/10.1145/1411304.1411316
   publisher: ACM
   author:
   - family: Heller
@@ -54,7 +53,6 @@ references:
 
 - title: A LISP SHELL
   DOI: 10.1145/947639.947642
-# URL: http://dx.doi.org/10.1145/947639.947642
   publisher: ACM
   author:
   - family: Ellis
@@ -77,7 +75,6 @@ references:
 
 - title: 'Staged parser combinators for efficient data processing'
   DOI: 10.1145/2660193.2660241
-#  URL: http://dx.doi.org/10.1145/2660193.2660241
   publisher: ACM OOPSLA
   author:
   - family: Jonnalagedda
@@ -92,7 +89,6 @@ references:
 
 - title: On Certain Formal Properties of Grammars
   DOI: 10.1016/S0019-9958(59)90362-6
-#  URL: http://dx.doi.org/10.1016/S0019-9958(59)90362-6
   publisher: Elsevier, Information and Control
   issued: 
     year: 1959
@@ -103,7 +99,6 @@ references:
 
 - title: Synthesizing Context Free Grammars from Sample Strings Based on Inductive CYK Algorithm
   DOI: 10.1007/978-3-540-45257-7_15
-#  URL: http://dx.doi.org/10.1007/978-3-540-45257-7_15
   publisher: 'Springer, Grammatical Inference: Algorithms and Applications'
   issued:
     year: 2000
@@ -140,7 +135,6 @@ references:
 
 - title: 'Bridging the semantic Web and Web 2.0 with representational state transfer (REST)'
   DOI: 10.1016/j.websem.2007.11.002
-#  URL: http://dx.doi.org/10.1016/j.websem.2007.11.002
   publisher: 'Springer, Grammatical Inference: Algorithms and Applications'
   author: 
   - family: Battle
