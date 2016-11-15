@@ -1,0 +1,13 @@
+name: CSC450-SEN-dedominica
+type: pdf
+source_files:
+  - head.md
+  - final.md
+  - tail.md
+depends: []
+filters:
+  - pandoc-citeproc
+buildOpts:
+  - '--self-contained'
+  - '--csl'
+  - './ieee-with-url-and-doi.csl'
