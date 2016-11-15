@@ -132,10 +132,11 @@ For instance, many of GNU's coreutils, such as their implementation of grep and 
 
 ```sh
 grep -P '(?>=)somepat' file 
-# does not work on macOS, which uses BSD coreutils
+# does not work on macOS, which uses, 
+# mostly, BSD coreutils
 ```
 
-Different Operating systems, ranging from GNU-based Linux distributions to non-free systems like macOS and OS X use different coreutils.
+Different operating systems$\mbox{\textemdash}$ranging from GNU-based Linux distributions, The BSDs and other non-free systems like macOS, Solaris, AIX, and other UNIX, can potentially use different coreutils.
 Thus, this means that shells scripts can depend on behaviors and unstructured output that are not portable.
 
 The modern web and service oriented architectures are built on the transactions of structured documents like JSON.
@@ -194,9 +195,9 @@ In most cases it's usually a process of:
 
 The main object of the project is to process structured documents.
 To accomplish this, the language will offer a plugin system.
-Plugins in this context are merely javascript functions which return$\textemdash$or return a value via a callback, javascript objects.
+Plugins in this context are merely javascript functions which return$\mbox{\textemdash}$or return a value via a callback, javascript objects.
 
-```sh
+```javascript
 // store some input or output buffer
 // parsed by a plugin named parseJson
 SHELL_VARS[ident] = parseJson(buffer)
@@ -214,7 +215,7 @@ The only limitation is that it can only store un-typed javascript objects, such 
 Accessing Variables are accessed using javascript notations encapsulated in template literal-like syntax.
 This integrates well with the Javascript virtual machine and is likely cleaner than bash or other shells.
 
-```sh
+```javascript
 // getting an array element from an object
 ${somevar.somearr[1]}
 // bash does not have nested objects
