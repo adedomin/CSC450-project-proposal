@@ -26,7 +26,7 @@ header-includes:
 - \hyphenpenalty 10000
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
-- \fancyfoot[L]{DeDominic - Lit Rev}
+- \fancyfoot[L]{DeDominic - jcom}
 - \fancyfoot[C]{CSC450 01 - \the\year}
 - \fancyfoot[R]{\thepage}
 - \twocolumn
