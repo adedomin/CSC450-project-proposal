@@ -136,7 +136,7 @@ grep -P '(?>=)somepat' file
 # mostly, BSD coreutils
 ```
 
-Different operating systems$\mbox{\textemdash}$ranging from GNU-based Linux distributions, The BSDs and other non-free systems like macOS, Solaris, AIX, and other UNIX, can potentially use different coreutils.
+Different operating systems--ranging from GNU-based Linux distributions, The BSDs and other non-free systems like macOS, Solaris, AIX, and other UNIX, can potentially use different coreutils.
 Thus, this means that shells scripts can depend on behaviors and unstructured output that are not portable.
 
 The modern web and service oriented architectures are built on the transactions of structured documents like JSON.
@@ -195,7 +195,7 @@ In most cases it's usually a process of:
 
 The main object of the project is to process structured documents.
 To accomplish this, the language will offer a plugin system.
-Plugins in this context are merely javascript functions which return$\mbox{\textemdash}$or return a value via a callback, javascript objects.
+Plugins in this context are merely javascript functions which return--or return a value via a callback, javascript objects.
 
 ```javascript
 // store some input or output buffer
@@ -236,10 +236,54 @@ This opens up possibilities to accomplish more general tasks that normally is le
 4. Events (part of methods)
 =========
 
-  * feature showing off *emit* and *on* keyword.
-  * describe how it works, nodejs EventEmitter, etc.
-  * use case examples.
-    * show use cases.
+One feature shells have is the ability to create file descriptors.
+With these, users have a fast way of connecting programs.
+File descriptors is usually how one would recreate--what could best be described, as an event loop.
+
+Javascript offers an object called an EventEmitter.
+with it, one can create low coupled software triggered by events.
+EventEmitters are very simple, the only two methods that are of importance are on() and emit().
+emit() lets one create an event labeled by a string, to be handled by an on().
+The on() handles events of a particular label with a function.
+
+In the shell, there exists a simple plugin which leverages this power.
+The shell would provide a builtin command, *emit* and *on*.
+The *on* command will take a label and a command as arguments.
+The command will be executed when a matching *emit* with the appropriate label is invoked.
+
+  * The *emit* command will accept input from stdin, standard input.
+  * The input will be piped into the stdin of the command that is labeled to be invoked.
+  * The command is
+
+{% put cool graph here %}
+
+```sh
+# prints what it is fed
+on 'echo' cat
+# will print hello, world
+echo 'hello, ' | emit 'echo'
+echo 'world' | emit 'echo'
+
+# reload config on config change
+on 'configChange' \ 
+    "kill -SIGWINCH ${some_server_pid}"
+# load inf parser plugin
+load parse-ini
+parse-ini SERVER_CONFIG /etc/server_config
+echo "db://newdb.url" \ 
+    | toVar "SERVER_CONFIG.db_url"
+parse-ini SERVER_CONFIG \ 
+    --serialize -o /etc/server_config
+# reload changed config
+emit "configChange"
+```
+
+As shown above, these events can be incredibly useful for tasks such as reloading a server when a configuration file is changed.
+It also demonstrates the power of plugins system.
+Users can create plugins to parse their configurations into javascript objects.
+This allows for an easy way to manipulate them and reconstitute them, with changes, back to a file.
+
+  * describe how it works, nodejs EventEmitter, etc. {% can do better %}
 
 5. Command and File Parsers (part of methods?)
 ===========================
