@@ -170,18 +170,7 @@ A shell that supports modern data structures like hash maps and structured docum
 For all features and goals, see section 4
 
 2.3. Methodology
-==============
-
-The goal is to build, not only a new shell, but basically an entire language.
-To do this is a multilevel step.
-In most cases it is usually a process of:
-
-  * building a lexical analyser
-  * a parser which generates an abstract syntax tree
-  * some kind of interpreter, compiler or virtual machine to execute that abstract syntax trees.
-
-2.4. Materials
----------------
+=================
 
 In order to make use of the technologies described, first the user must have NodeJS.
 The version of node being used on the test machine will be the latest as of this writing, v7.1.0.
@@ -191,9 +180,13 @@ The project makes use of such dependencies like pegjs.
 When downloading the source of the project from github.
 It is necessary to run npm install to require dependencies.
 
-The project is version controlled using git and is hosted on a remote repository on github.
+The project is version controlled using git and is hosted on a remote repository on github[^git].
 To check out the project, it would be advised to have a git client.
 npm can also download the latest build of the project giving it the github link.
+
+[^git]: Source: https://github.com/adedomin/jcom
+
+### 2.3.1. Libraries
 
 The project makes use of the following libraries.
 For a more up-to-date list, please consult the package.json file in the project which lists all the dependencies and their semver version number:
@@ -202,6 +195,8 @@ For a more up-to-date list, please consult the package.json file in the project 
   * lodash - utility functions for functional array and object handling.
   * js-yaml - a yaml parser for javascript, for an example plugin
   * various NodeJS built-ins: fs, process, readline, etc.
+
+### 2.3.2. Testing Envrionment
 
 The machine being used for testing is a Fedora GNU/Linux, release 24, virtual machine running on a Windows 10 Hyper-V hypervisor.
 This hypervisor has a Core i7-3930k processor and 32GB of memory.
@@ -270,10 +265,10 @@ The on() handles events of a particular label with a function.
 In the shell, there exists a simple plugin which leverages this power.
 The shell would provide a builtin command, *emit* and *on*.
 The *on* command will take a label and a command as arguments.
-The command will be executed when a matching *emit* with the appropriate label is invoked.
+When executed, the system will listen for the label provided.
 
-  * The *emit* command will accept input from stdin, standard input.
-  * The input will be piped into the stdin of the command that is labeled to be invoked.
+As a result, when a user calls an *emit* with the correct label, the *on* will be triggered and the command associated with the on will be ran.
+Information can be fed through the *emit* that will flow to the *on* using piping.
 
 {% put cool graph here %}
 
@@ -303,7 +298,7 @@ It also demonstrates the power of plugins system.
 Users can create plugins to parse their configurations into javascript objects.
 This allows for an easy way to manipulate them and reconstitute them, with changes, back to a file.
 
-  * describe how it works, nodejs EventEmitter, etc. {% can do better %}
+{% describe how it works, nodejs EventEmitter, etc. {% can do better %} %}
 
 3.3. Command and File Parsers
 -----------------------------

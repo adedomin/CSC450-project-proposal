@@ -16,7 +16,8 @@
 
 title: "jcom: A JavaScript Object Shell"
 abstract: |
-    *to be written*
+    *To be written.*
+    *This is a rough draft, to see the latest revision, visit <https://github.com/adedomin/CSC450-project-written> under the final/ directory.*
 
 papersize: letter
 geometry: margin=2cm
