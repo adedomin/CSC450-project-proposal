@@ -303,12 +303,35 @@ This allows for an easy way to manipulate them and reconstitute them, with chang
 3.3. Command and File Parsers
 -----------------------------
 
-  * section to show off feature.
-  * describe how it allows one to create parser modules for commands and common files.
-  * examples of uses.
-    * ideally just a few commands, like ls, etc.
-    * show how it can be used to easily configure some program.
-      * nagios, apache, something.
+As shown above, the shell can simplify some very common configuration tasks.
+As suggested, many common shell tasks involve handling file data.
+To do simple tasks like modifying configuration files can result in humorous stream processing scripts.
+Similar to how json objects have defined schema, many times configuration files have some formal structure.
+A common structure is the key:value pattern.
+Usually files have keys and their values and they are separated by a simple equality sign;
+such files are easily handled by tools like grep or sed.
+
+More advanced configuration structures like ini files, give the user the ability to have single-level nested objects and comments.
+These files can still be easily transformed with basic line oriented tools.
+However, consider rich configuration structures like yaml or even Java .properties files.
+These structures can have infinitely nested objects, arrays and various primitive types.
+Both of these configuration files have type affinity systems.
+These become slightly harder to modify with line oriented tools.
+
+By implementing parsers in javascript, a user could then load it into the shell and begin manipulating it using simple object dot notation.
+
+```sh
+# parse nagios's main configuration
+load nagios-parser
+
+nagios-parser --to-var NAGIOS /etc/nagios/nagios.cfg
+echo ${NAGIOS.host1} # prints info related to host1
+${NAGIOS.host1 = {new obj}} # new host1
+nagios-parser --serialize -o /etc/nagios/nagios.cfg
+```
+
+All that needs to be done is to make a parser for it.
+Plugins, in a way, are no different from normal shell programs.
 
 3.4. Further Examples
 ---------------------
