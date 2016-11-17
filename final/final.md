@@ -41,8 +41,8 @@ head -n 3
 1.1. Related Works
 ------------------
 
-Object Oriented shells isn't an entirely new concept.
-As others have shown, many projects, some more serious than others, attempted to solve this issue [@shcaml] [@oosh].
+Object Oriented shells is not an entirely new concept.
+Many projects, some more serious than others, attempted to solve this issue [@shcaml] [@oosh].
 
 The power of shells is well understood.
 Most programming languages have some kind of system() or shell invocation mechanism.
@@ -51,8 +51,8 @@ these combinators allowed for slipping in native ocaml code and objects.
 As a result these code pieces could be parsers, that could take known shell commands, and structure their data into key-value trees [@shcaml].
 
 Purely object oriented attempts ultimately result in new instances of bash and explicit message passing with named pipes [@oosh].
-Even though offers powerful object-like abstractions it general comes with significant overhead.
-It also incurs security risks since processes can write and listen to the object named pipes.
+Even though such a system enables shells to have powerful object-like abstractions, it generally comes with significant overhead.
+It also incurs security risks since processes can write and listen to the objects' named pipes.
 
 Lisp shells have been ideas attempted in the past;
 examples are like Scheme Shell, and other toy, academic ones [@shcaml][@lispsh].
@@ -65,9 +65,9 @@ The streaming pipelines in Powershell are merely .NET classes which allow for so
 As a result, Microsoft prefers to call more than just a shell, but a whole "automation and configuration management framework."
 One that is capable of handling structured data such as JSON, XML, CSV, etc, REST APIs, and object models.
 
-Tools like Ansible, aren't quite shells, but are domain specific languages which solve similar problems.
-Ansible, et al, use code generation and a yaml playbook file to construct python code;
-since python is a general purpose language, it handles structured and typed data much better than shell code.
+Tools like Ansible, are not quite shells, but are domain specific languages which solve similar problems.
+Ansible and Salt Stack use code generation--and a structured document playbook file, to construct python code.
+Since python is a general purpose language, it handles structured and typed data much better than shell code.
 As a result, powerful modules for system administration, configuration and interaction with web services have made it a formidable automation tool.
 
 1.1. Service-oriented Architecture
@@ -85,7 +85,7 @@ Generally when dealing with web APIs it is recommended to build a general purpos
 1.2. Designing and Defining a Domain Languages
 ------------------------------------------------------
 
-Designing domain specific languages is a arduous problem.
+Designing domain specific languages is a very slow and arduous task.
 Some have suggested designing and developing domain specific languages using meta-models; 
 basically a model, modeling models [@dsldes].
 This process makes use of advanced features of UML version 2.1.
@@ -128,7 +128,7 @@ Even variables like \$IFS can completely alter how these byte[] streams are hand
 
 If any changes were to occur in coreutils, it could break numerous tools and scripts.
 Even using different coreutils can lead to issues.
-For instance, many of GNU's coreutils, such as their implementation of grep and df, add features not strictly standardized by POSIX. An example:
+For instance, many of the GNU coreutils--such as their implementation of grep and df, add features not strictly standardized by POSIX. An example:
 
 ```sh
 grep -P '(?>=)somepat' file 
@@ -142,8 +142,8 @@ Thus, this means that shells scripts can depend on behaviors and unstructured ou
 The modern web and service oriented architectures are built on the transactions of structured documents like JSON.
 Currently, shells do not offer performant or efficient ways of handling these data structures.
 For instance, every time one would need to pull a value from a json object, it would have to be parsed by a shell tool like jq, each time.
-However many other scripting languages like python, perl and javascript offer such facilities
-For the shell to have utility in a modern cloud oriented future, it should be built to natively handle this data.
+Many other scripting languages like python, perl and javascript offer such facilities; thus it should be expected that a shell should have the feature as well.
+For the shell to have utility in a modern cloud oriented future, it should be able to handle this data in a natural and clean way.
 
 2.1. Other Attempts
 -------------------
@@ -174,7 +174,7 @@ For all features and goals, see section 4
 
 The goal is to build, not only a new shell, but basically an entire language.
 To do this is a multilevel step.
-In most cases it's usually a process of:
+In most cases it is usually a process of:
 
   * building a lexical analyser
   * a parser which generates an abstract syntax tree
@@ -183,15 +183,36 @@ In most cases it's usually a process of:
 2.4. Materials
 ---------------
 
-  * list of technologies.
-    * javascript
-    * nodejs
-  * libraries.
-    * pegjs
-  * machine used in benchmarking/experiment.
+In order to make use of the technologies described, first the user must have NodeJS.
+The version of node being used on the test machine will be the latest as of this writing, v7.1.0.
+With NodeJS comes crucial tools like npm.
+npm is the tool that handles dependencies;
+The project makes use of such dependencies like pegjs.
+When downloading the source of the project from github.
+It is necessary to run npm install to require dependencies.
 
-3. Objects and Structured Documents (part of methods)
-===================================
+The project is version controlled using git and is hosted on a remote repository on github.
+To check out the project, it would be advised to have a git client.
+npm can also download the latest build of the project giving it the github link.
+
+The project makes use of the following libraries.
+For a more up-to-date list, please consult the package.json file in the project which lists all the dependencies and their semver version number:
+
+  * pegjs - parser generator
+  * lodash - utility functions for functional array and object handling.
+  * js-yaml - a yaml parser for javascript, for an example plugin
+  * various NodeJS built-ins: fs, process, readline, etc.
+
+The machine being used for testing is a Fedora GNU/Linux, release 24, virtual machine running on a Windows 10 Hyper-V hypervisor.
+This hypervisor has a Core i7-3930k processor and 32GB of memory.
+The machine has 2 cores of the 6 physical, reserved for itself, with dynamically resizing memory, up to 16GB.
+To ensure support for the latest features and capabilities, the latest release--as of this writing, v7.1.0, was installed on the machine.
+
+3. Results
+==========
+
+3.1. Objects and Structured Documents
+-------------------------------------
 
 The main object of the project is to process structured documents.
 To accomplish this, the language will offer a plugin system.
@@ -202,7 +223,7 @@ Plugins in this context are merely javascript functions which return--or return 
 // parsed by a plugin named parseJson
 SHELL_VARS[ident] = parseJson(buffer)
 // a plugin that uses xpath to select some
-// values from a XML document and stores it
+// values from an XML document and stores it
 SHELL_VARS[ident2] = xpathSelector(buffer, args)
 ```
 
@@ -233,15 +254,15 @@ Again, as shown in {%SOME FIGURE%} javascript notation and variable storage open
 This opens up possibilities to accomplish more general tasks that normally is left to general scripting languages like perl, python, ruby or even javascript with nodejs.
 
 
-4. Events (part of methods)
-=========
+3.2. Events
+-----------
 
 One feature shells have is the ability to create file descriptors.
 With these, users have a fast way of connecting programs.
 File descriptors is usually how one would recreate--what could best be described, as an event loop.
 
 Javascript offers an object called an EventEmitter.
-with it, one can create low coupled software triggered by events.
+With it, one can create low coupled software triggered by events.
 EventEmitters are very simple, the only two methods that are of importance are on() and emit().
 emit() lets one create an event labeled by a string, to be handled by an on().
 The on() handles events of a particular label with a function.
@@ -253,7 +274,6 @@ The command will be executed when a matching *emit* with the appropriate label i
 
   * The *emit* command will accept input from stdin, standard input.
   * The input will be piped into the stdin of the command that is labeled to be invoked.
-  * The command is
 
 {% put cool graph here %}
 
@@ -285,8 +305,8 @@ This allows for an easy way to manipulate them and reconstitute them, with chang
 
   * describe how it works, nodejs EventEmitter, etc. {% can do better %}
 
-5. Command and File Parsers (part of methods?)
-===========================
+3.3. Command and File Parsers
+-----------------------------
 
   * section to show off feature.
   * describe how it allows one to create parser modules for commands and common files.
@@ -295,14 +315,14 @@ This allows for an easy way to manipulate them and reconstitute them, with chang
     * show how it can be used to easily configure some program.
       * nagios, apache, something.
 
-6. Further Examples
-===================
+3.4. Further Examples
+---------------------
 
   * compare and contrast to various other tools and shells.
   * benchmarking vs other tools/technologies.
 
-7. Results|Findings
-===================
+3.5 Final Thought
+-----------------
 
   * final word, compare to other shells and systems manipulation technologies.
   * present benchmarking results.
