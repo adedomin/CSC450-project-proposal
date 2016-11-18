@@ -1,0 +1,8 @@
+digraph vargraph {
+    rankdir=LR;
+    input_line -> template_string;
+    variables -> template_string;
+    input_line -> plugin;
+    plugin -> variables;
+    template_string -> variables;
+}

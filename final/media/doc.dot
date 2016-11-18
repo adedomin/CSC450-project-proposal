@@ -1,0 +1,8 @@
+digraph docgraph {
+    rankdir=LR;
+
+    command -> plugin;
+    plugin -> variables [label="deserialize"];
+    plugin -> stdout [label="serialize"];
+    command -> variables [label="transform"];
+}

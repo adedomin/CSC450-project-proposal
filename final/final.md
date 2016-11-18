@@ -65,7 +65,7 @@ Another way of attaining structured inputs and outputs is through an object syst
 One attempt at object oriented shells attempted to make use of named pipes and file descriptors to mimic objects [@oosh].
 This resulted in a new process for every object; this comes with great performance cost.
 Each object still has limitations in terms of functionality.
-They are basically just another shell with it's own encapsulated data.
+They are basically just another shell with its own encapsulated data.
 It also incurs security risks since processes can write and listen to the objects' named pipes.
 
 ### 1.1.3. Lisp Shells
@@ -75,7 +75,7 @@ examples are like Scheme Shell, and other toy, academic ones [@shcaml][@lispsh].
 The advantage lisp gives over other languages, which makes it suitable for shells, is that the program and data have the same form [@lispsh];
 this comes in handy in meta programming, where programs can dynamically change to handle certain data.
 It is also a closed language, as in, one can pull from data that is in an outer function.
-Closure property is what gives lisp it's ability to resemble structured documents.
+Closure property is what gives lisp its ability to resemble structured documents.
 In a way, one can make a lisp-like dialect using JSON.
 
 ### 1.1.4. Powershell
@@ -92,6 +92,9 @@ Ansible and Salt Stack use code generation--and a strongly structured document "
 Since python is a general purpose language, it handles structured and typed data much better than shell code.
 Ansible as a result has become a cornerstone of modern IT automation, provisioning and configuration management;
 many of these problems require working with such data.
+
+The next few sections will cover some background on important topics and issues.
+It is necessary to convey the importance of the project as a whole.
 
 1.2. Service-oriented Architecture
 ----------------------------------
@@ -124,7 +127,7 @@ This would be useful for languages built using example strings.
 -----------
 
 Some system events may impact other systems.
-Currently, other than using "triggers", there is no way to define listen events in POSIX shells.
+Currently, other than using triggers, there is no way to define listen events in POSIX shells.
 Powershell offers such functionality through the power of its .NET classes [@monadshell].
 To accomplish a similar function, one must use a blocking statement like this:
 
@@ -170,7 +173,7 @@ This makes it unsuitable as an actual systems shell.
 ### 1.6.2 Readability
 
 Some developers have tried to add other structures to shell input, such as Scheme Shell and other implementations [@lispsh].
-Using functional composition, one can construct a very powerful shell, but it won't be as clear and concise as normal shell syntax.
+Using functional composition, one can construct a very powerful shell, but it will not be as clear and concise as normal shell syntax.
 this is because lisp does not allow for pipelining-like syntax.
 For instance, consider this simple example and scale it out:
 
@@ -262,6 +265,10 @@ Please consult the examples/ directory in the repository.
 3.1. Objects and Structured Documents
 -------------------------------------
 
+![Variable workflow[^vars]](media/variables.png)
+
+[^vars]: This shows how one makes use of variables and the ways to get and set them.
+
 The main object of the project is to process structured documents.
 To accomplish this, the language will offer a plugin system.
 Plugins in this context are merely javascript functions which return--or return a value via a callback, javascript objects.
@@ -298,12 +305,15 @@ for var in ${somevar[@]}; do something; done
 ${somevar.someotherobj.somekey.moreobjs.etc}
 ```
 
-Again, as shown in {%SOME FIGURE%} javascript notation and variable storage opens up an avenue to handle various kinds of data.
-This opens up possibilities to accomplish more general tasks that normally is left to general scripting languages like perl, python, ruby or even javascript with nodejs.
-
+Again, as shown in the above example, javascript notation and variable storage opens up an avenue to handle various kinds of data.
+This opens up possibilities to accomplish more general tasks that normally is left to general scripting languages like perl, python, ruby or even javascript with Nodejs.
 
 3.2. Events
 -----------
+
+![Event workflow[^event]](media/events.png)
+
+[^event]: This shows how the event system works by registering commands or daemons to labels and invoking or feeding more data into them using an accompanied emit.
 
 One feature shells have is the ability to create file descriptors.
 With these, users have a fast way of connecting programs.
@@ -322,8 +332,6 @@ When executed, the system will listen for the label provided.
 
 As a result, when a user calls an *emit* with the correct label, the *on* will be triggered and the command associated with the on will be ran.
 Information can be fed through the *emit* that will flow to the *on* using piping.
-
-{% put cool graph here %}
 
 ```sh
 # prints what it is fed
@@ -351,10 +359,12 @@ It also demonstrates the power of plugins system.
 Users can create plugins to parse their configurations into javascript objects.
 This allows for an easy way to manipulate them and reconstitute them, with changes, back to a file.
 
-{% describe how it works, nodejs EventEmitter, etc. {% can do better %} %}
-
 3.3. Command and File Parsers
 -----------------------------
+
+![Document parsing and manipulation[^doc]](media/doc.png)
+
+[^doc]: This shows how commands feed serialized documents and how plugins manipulate the shell's variable pool to store them.
 
 As shown above, the shell can simplify some very common configuration tasks.
 As suggested, many common shell tasks involve handling file data.
@@ -366,7 +376,7 @@ such files are easily handled by tools like grep or sed.
 
 More advanced configuration structures like ini files, give the user the ability to have single-level nested objects and comments.
 These files can still be easily transformed with basic line oriented tools.
-However, consider rich configuration structures like yaml or even Java .properties files.
+However, consider rich configuration structures like YAML or even Java .properties files.
 These structures can have infinitely nested objects, arrays and various primitive types.
 Both of these configuration files have type affinity systems.
 These become slightly harder to modify with line oriented tools.
@@ -385,19 +395,6 @@ nagios-parser --serialize -o nagios.cfg
 ```
 
 All that needs to be done is to make a parser for it.
-Plugins, in a way, are no different from normal shell programs.
+Plugins, in a way, are no different from normal shell programs[^discuss].
 
-4. Discussion
-=============
-
-  * comments about the findings
-    * example syntax, comparison
-    * performance?
-    * readability?
-    * suitability over other means?
-  * implications of the project.
-    * replace certain domain specific languages like ansible.
-    * fully free and open source powershell like shell for POSIX.
-    * built on a common, hackable, language many know.
-  * state limitations, weaknesses in product.
-  * further work needed.
+[^discuss]: Discussion component of the paper is pending further results, to be written.

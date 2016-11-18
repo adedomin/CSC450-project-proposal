@@ -1,0 +1,9 @@
+digraph eventgraph {
+    rankdir=LR;
+
+    input_line -> on [label="label event"];
+    input_line -> emit [dir=both label="invoke event x"];
+    on -> command [label="when triggered, execute"];
+    emit -> on [label="emit for labeled on executes"];
+    command -> emit [label="feed result back to user"];
+}
