@@ -12,7 +12,7 @@
 1. Introduction
 ===============
 
-No popular shells, as of late, have the ability to handle modern structured documents, such as json.
+No popular shells, as of late, have the ability to handle modern structured documents, such as JSON.
 Because of this, it is difficult to use shells for modern text and data handling.
 This is especially the case for web oriented services;
 such services heavily rely on transacting structured documents or serialized objects.
@@ -47,6 +47,8 @@ head -n 3
 Object Oriented shells are not an entirely new concept.
 Many projects, some more serious than others, attempted to solve this data-wrangling issue [@shcaml] [@oosh].
 
+### 1.1.1. shcaml
+
 Shells have very powerful uses;
 this is why most systems use a shell as the most basic UI for interacting with a operating system.
 Sometimes it's ideal to use these features to handle interprocess communication. 
@@ -57,6 +59,8 @@ This library offered a more powerful shell spawning construct for the OCaml lang
 One such feature of the library gave the user the ability to utilize OCaml functions as a go-between two programs.
 This allowed for powerful data-wrangling functional compositions that could take in data from shells and output or exchange structured documents [@shcaml].
 
+### 1.1.2. Named Pipe Shells
+
 Another way of attaining structured inputs and outputs is through an object system.
 One attempt at object oriented shells attempted to make use of named pipes and file descriptors to mimic objects [@oosh].
 This resulted in a new process for every object; this comes with great performance cost.
@@ -64,18 +68,24 @@ Each object still has limitations in terms of functionality.
 They are basically just another shell with it's own encapsulated data.
 It also incurs security risks since processes can write and listen to the objects' named pipes.
 
+### 1.1.3. Lisp Shells
+
 Lisp--another functional like language, shells have been other ways of trying to add ;
 examples are like Scheme Shell, and other toy, academic ones [@shcaml][@lispsh].
 The advantage lisp gives over other languages, which makes it suitable for shells, is that the program and data have the same form [@lispsh];
 this comes in handy in meta programming, where programs can dynamically change to handle certain data.
 It is also a closed language, as in, one can pull from data that is in an outer function.
 Closure property is what gives lisp it's ability to resemble structured documents.
-In a way, one can make a lisp-like dialect using json.
+In a way, one can make a lisp-like dialect using JSON.
+
+### 1.1.4. Powershell
 
 Projects like Powershell are built on the .NET runtime and can thus utilize all of the language features therein.
 The streaming pipelines in Powershell are merely .NET classes which allow for some structural correctness and parsing [@shcaml][@monadshell].
 As a result, Microsoft prefers to call more than just a shell, but a whole "automation and configuration management framework."
 One that is capable of handling structured data such as JSON, XML, CSV, etc, REST APIs, and object models.
+
+### 1.1.5. Ansible
 
 Tools like Ansible, are not quite shells, but are domain specific languages which solve similar problems.
 Ansible and Salt Stack use code generation--and a strongly structured document "playbook", to construct python code.
@@ -83,7 +93,7 @@ Since python is a general purpose language, it handles structured and typed data
 Ansible as a result has become a cornerstone of modern IT automation, provisioning and configuration management;
 many of these problems require working with such data.
 
-1.1. Service-oriented Architecture
+1.2. Service-oriented Architecture
 ----------------------------------
 
 Service-oriented Architectures, or SOA, are modern way to construct, highly available, data rich web applications.
@@ -96,8 +106,8 @@ POSIX-shells are nearly completely useless for interacting with SOAs.
 Generally when dealing with web APIs it is recommended to build a general purpose language script instead;
 If an ansible module exists, that may be another alley of interest.
 
-1.2. Designing and Defining a Domain Languages
-------------------------------------------------------
+1.3. Designing and Defining a Domain Languages
+----------------------------------------------
 
 Designing domain specific languages is a very slow and arduous task.
 Some have suggested designing and developing domain specific languages using meta-models; 
@@ -110,7 +120,7 @@ Generally this is done empirically, as in from experience and trial and error.
 Some have used machine learning and bottom-up CYK based parsers to generate grammar [@synthcfg].
 This would be useful for languages built using example strings.
 
-1.3. Events
+1.4. Events
 -----------
 
 Some system events may impact other systems.
@@ -129,17 +139,12 @@ echo "event" >&99
 
 Given that package management tools used in many linux distributions use shell like scripting, and have a post-install process, it may be helpful for a user to define his own post-install event handlers or notifiers.
 
-2. Background
-=============
+1.5. Portability Concerns
+-------------------------
 
 Shells are the primary interface into a POSIX system.
 As a result, many tools and utilities rely on shells to handle and process files and their data.
-However, shells have one strong limitation in them;
-the data they work with is not strongly structured.
-As a result, sysadmins and programmers make use of confusing and massive awk scripts and shell pipelines to derive valuable information or to make decisions.
-Even variables like \$IFS can completely alter how these byte[] streams are handled.
 
-If any changes were to occur in coreutils, it could break numerous tools and scripts.
 Even using different coreutils can lead to issues.
 For instance, many of the GNU coreutils--such as their implementation of grep and df, add features not strictly standardized by POSIX. An example:
 
@@ -152,41 +157,69 @@ grep -P '(?>=)somepat' file
 Different operating systems--ranging from GNU-based Linux distributions, The BSDs and other non-free systems like macOS, Solaris, AIX, and other UNIX, can potentially use different coreutils.
 Thus, this means that shells scripts can depend on behaviors and unstructured output that are not portable.
 
-The modern web and service oriented architectures are built on the transactions of structured documents like JSON.
-Currently, shells do not offer performant or efficient ways of handling these data structures.
-For instance, every time one would need to pull a value from a json object, it would have to be parsed by a shell tool like jq, each time.
-Many other scripting languages like python, perl and javascript offer such facilities; thus it should be expected that a shell should have the feature as well.
-For the shell to have utility in a modern cloud oriented future, it should be able to handle this data in a natural and clean way.
+1.6. Going Further
+------------------
 
-2.1. Other Attempts
--------------------
+### 1.6.1. Interactively
 
-An OCaml library called shcaml added a functional composer called shtreams which allows for transforming byte streams into structured documents [@shcaml].
+An OCaml library called shcaml added functional combinators called shtreams which allow for transforming byte streams into structured documents [@shcaml].
+However, it is merely a library.
+It has no use interactively.
+This makes it unsuitable as an actual systems shell.
+
+### 1.6.2 Readability
+
 Some developers have tried to add other structures to shell input, such as Scheme Shell and other implementations [@lispsh].
-They aimed to bring S-Expression syntax to shells. Ideally to add stronger functional properties and variadic expressiveness.
-It also helps with meta-programming, since it allows one to develop Domain specific languages using high order functional composition.
-At the end of the day, both attempts introduced systemic performance issues or failed to solve core problems, such as parsing general POSIX tools.
+Using functional composition, one can construct a very powerful shell, but it won't be as clear and concise as normal shell syntax.
+this is because lisp does not allow for pipelining-like syntax.
+For instance, consider this simple example and scale it out:
 
-An older attempt to address some of these problems was using file system abstractions to mimic object oriented principles [@oosh].
-They would spawn named pipes and shell scripts to mimic sending and retrieving values and results.
-This ultimately missed the point since it still relies on the same lack of native data structure support.
-It also had massive performance issues, since improperly used named pipes are slow.
+```lisp
+(| 
+  (cat somefile)
+  (some-command))
+```
+
+```sh
+cat somefile | some-command
+```
+
+### 1.6.3. Performance
+
+The named-pipe shell would simply be too slow.
+The need to spawn new processes for each object and dealing with potentially slow named pipe interaction is too heavy [@oosh].
 
 
-2.2. Objective
+1.7 Objective
 --------------
 
-Ultimately I want to take what has been learned and make a completely modern shell.
-A shell that has the concepts of clean, true objects.
-A shell that has mechanisms to structure data streams so they can be easily accessed using simple dot notation.
-A shell that supports modern data structures like hash maps and structured documents like JSON, YAML, XML, TOML and various others.
-For all features and goals, see section 4
+Given all the above, the goal is to build a new shell.
+This shell should be able to execute simple commands and offer basic shell features like pipelining.
+To differentiate it from other shells, it should be able directly work and manipulate modern data structures and documents like JSON.
+The shell should be fully interactive, like a normal shell is.
+The shell should keep with the traditional syntax as much as possible, both for readability concerns, but also for familiarity.
+Ideally it should be fast, but since it will be written in a scripting language, this might not be fully attainable.
+To extend the shell's functionality, it is necessary that it have a plugin system.
+The plugin system will allow for added features and capabilities.
 
-2.3. Methodology
-=================
+Ultimately, the goal is to see what a shell with objects can do.
+It is the goal of this research not only to build a shell, but to also observe the positive utility and advantage of a shell.
+
+1.8. Summary of Results
+-----------------------
+
+Below, this paper will cover the features of the shell[^progress].
+The paper will discuss how the program stores variables, including objects, or documents.
+It will also show examples of usage, both manipulating and using variables.
+Other examples, such as use cases and the plugin system will be demonstrated.
+
+[^progress]: note that the features as is are purely conceptual.
+
+2. Materials and Methodology
+============================
 
 In order to make use of the technologies described, first the user must have NodeJS.
-The version of node being used on the test machine will be the latest as of this writing, v7.1.0.
+The version of node being used on the test machine will be the latest--as of this writing, v7.1.0.
 With NodeJS comes crucial tools like npm.
 npm is the tool that handles dependencies;
 The project makes use of such dependencies like pegjs.
@@ -195,14 +228,15 @@ It is necessary to run npm install to require dependencies.
 
 The project is version controlled using git and is hosted on a remote repository on github[^git].
 To check out the project, it would be advised to have a git client.
-npm can also download the latest build of the project giving it the github link.
+npm can also download the latest build of the project given the url in the footer;
+this is done by typing npm install url.
 
 [^git]: Source: https://github.com/adedomin/jcom
 
 ### 2.3.1. Libraries
 
 The project makes use of the following libraries.
-For a more up-to-date list, please consult the package.json file in the project which lists all the dependencies and their semver version number:
+For a more up-to-date list, please consult the package.JSON file in the project which lists all the dependencies and their semver version number:
 
   * pegjs - parser generator
   * lodash - utility functions for functional array and object handling.
@@ -213,10 +247,13 @@ For a more up-to-date list, please consult the package.json file in the project 
 
 The machine being used for testing is a Fedora GNU/Linux, release 24, virtual machine running on a Windows 10 Hyper-V hypervisor.
 This hypervisor has a Core i7-3930k processor and 32GB of memory.
-The machine has 2 cores of the 6 physical, reserved for itself, with dynamically resizing memory, up to 16GB.
+The virtual machine has been allocated 2 cores of the 6 physical, with dynamically resizing memory, up to 16GB.
 To ensure support for the latest features and capabilities, the latest release--as of this writing, v7.1.0, was installed on the machine.
 Interaction with the machine will be done over a network;
 this is accomplished using a remote shell protocol called secure shell (ssh).
+
+Any and all scripts necessary to reproduce the results will be made available in the github link provided in the footer.
+Please consult the examples/ directory in the repository.
 
 
 3. Results
@@ -322,7 +359,7 @@ This allows for an easy way to manipulate them and reconstitute them, with chang
 As shown above, the shell can simplify some very common configuration tasks.
 As suggested, many common shell tasks involve handling file data.
 To do simple tasks like modifying configuration files can result in humorous stream processing scripts.
-Similar to how json objects have defined schema, many times configuration files have some formal structure.
+Similar to how JSON objects have defined schema, many times configuration files have some formal structure.
 A common structure is the key:value pattern.
 Usually files have keys and their values and they are separated by a simple equality sign;
 such files are easily handled by tools like grep or sed.
