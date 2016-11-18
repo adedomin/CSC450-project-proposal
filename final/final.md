@@ -213,7 +213,7 @@ The paper will discuss how the program stores variables, including objects, or d
 It will also show examples of usage, both manipulating and using variables.
 Other examples, such as use cases and the plugin system will be demonstrated.
 
-[^progress]: note that the features as is are purely conceptual.
+[^progress]: note that the features as described are purely conceptual at this stage.
 
 2. Materials and Methodology
 ============================
@@ -386,15 +386,7 @@ nagios-parser --serialize -o /etc/nagios/nagios.cfg
 All that needs to be done is to make a parser for it.
 Plugins, in a way, are no different from normal shell programs.
 
-3.4 Final Thought
------------------
-
-  * final word, compare to other shells and systems manipulation technologies.
-  * present benchmarking results.
-    * graphs
-    * tables
-
-8. Discussion
+4. Discussion
 =============
 
   * comments about the findings
