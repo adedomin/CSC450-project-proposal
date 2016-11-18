@@ -377,10 +377,11 @@ By implementing parsers in javascript, a user could then load it into the shell 
 # parse nagios's main configuration
 load nagios-parser
 
-nagios-parser --to-var NAGIOS /etc/nagios/nagios.cfg
-echo ${NAGIOS.host1} # prints info related to host1
+nagios-parser --to-var NAGIOS nagios.cfg
+ # prints info related to host1
+echo ${NAGIOS.host1}
 ${NAGIOS.host1 = {new obj}} # new host1
-nagios-parser --serialize -o /etc/nagios/nagios.cfg
+nagios-parser --serialize -o nagios.cfg
 ```
 
 All that needs to be done is to make a parser for it.
