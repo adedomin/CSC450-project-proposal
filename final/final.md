@@ -12,10 +12,13 @@
 1. Introduction
 ===============
 
-Currently popular shells have no built-in feature complete way of transacting or using structured documents.
-As a result, working with web oriented services becomes a hassle;
-A hassle that involves very long and contrived text pipelines full of tools like: sed, grep, awk, xargs, tr, paste, cut, tee, and so on.
-What results is some sort of string tokenized parser.
+No popular shells, as of late, have the ability to handle modern structured documents, such as json.
+Because of this, it is difficult to use shells for modern text and data handling.
+This is especially the case for web oriented services;
+such services heavily rely on transacting structured documents or serialized objects.
+
+This limitation has resulted in the hassle of wrangling various line oriented tools--such as: sed, grep, awk, xargs, tr, paste, cut, tee, etc, to try and derive value and data.
+Thus, in a very contrived way, one has effectively wrote a parser.
 An example of the problem can be seen below[^1].
 
 [^1]: source: <https://github.com/GeneralUnRest/neo8ball-irc/blob/master/lib/search.sh>
@@ -41,34 +44,44 @@ head -n 3
 1.1. Related Works
 ------------------
 
-Object Oriented shells is not an entirely new concept.
-Many projects, some more serious than others, attempted to solve this issue [@shcaml] [@oosh].
+Object Oriented shells are not an entirely new concept.
+Many projects, some more serious than others, attempted to solve this data-wrangling issue [@shcaml] [@oosh].
 
-The power of shells is well understood.
-Most programming languages have some kind of system() or shell invocation mechanism.
-Some, such as the developers of shcaml attempted to take it further by including functional combinators;
-these combinators allowed for slipping in native ocaml code and objects.
-As a result these code pieces could be parsers, that could take known shell commands, and structure their data into key-value trees [@shcaml].
+Shells have very powerful uses;
+this is why most systems use a shell as the most basic UI for interacting with a operating system.
+Sometimes it's ideal to use these features to handle interprocess communication. 
+This is also why many programming languages provide  the ability to spawn shells--functions like system(), in the standard library.
+The power of the shell was not lost to some OCaml--a functional language, developers;
+these developers created, shcaml.
+This library offered a more powerful shell spawning construct for the OCaml language.
+One such feature of the library gave the user the ability to utilize OCaml functions as a go-between two programs.
+This allowed for powerful data-wrangling functional compositions that could take in data from shells and output or exchange structured documents [@shcaml].
 
-Purely object oriented attempts ultimately result in new instances of bash and explicit message passing with named pipes [@oosh].
-Even though such a system enables shells to have powerful object-like abstractions, it generally comes with significant overhead.
+Another way of attaining structured inputs and outputs is through an object system.
+One attempt at object oriented shells attempted to make use of named pipes and file descriptors to mimic objects [@oosh].
+This resulted in a new process for every object; this comes with great performance cost.
+Each object still has limitations in terms of functionality.
+They are basically just another shell with it's own encapsulated data.
 It also incurs security risks since processes can write and listen to the objects' named pipes.
 
-Lisp shells have been ideas attempted in the past;
+Lisp--another functional like language, shells have been other ways of trying to add ;
 examples are like Scheme Shell, and other toy, academic ones [@shcaml][@lispsh].
-The advantage lisp gives over other languages, which makes it suitable for shells, is that the program and data have the same form [@lispsh].
-This comes in handy in meta programming, where programs can dynamically change to handle certain data.
-In terms of structural data, strong functional composition and combination can give structural data parsing functionality; of course at great cost of readability and complexity.
+The advantage lisp gives over other languages, which makes it suitable for shells, is that the program and data have the same form [@lispsh];
+this comes in handy in meta programming, where programs can dynamically change to handle certain data.
+It is also a closed language, as in, one can pull from data that is in an outer function.
+Closure property is what gives lisp it's ability to resemble structured documents.
+In a way, one can make a lisp-like dialect using json.
 
-Projects like Powershell are built on the .NET runtime and can thus utilize class like features and functions.
+Projects like Powershell are built on the .NET runtime and can thus utilize all of the language features therein.
 The streaming pipelines in Powershell are merely .NET classes which allow for some structural correctness and parsing [@shcaml][@monadshell].
 As a result, Microsoft prefers to call more than just a shell, but a whole "automation and configuration management framework."
 One that is capable of handling structured data such as JSON, XML, CSV, etc, REST APIs, and object models.
 
 Tools like Ansible, are not quite shells, but are domain specific languages which solve similar problems.
-Ansible and Salt Stack use code generation--and a structured document playbook file, to construct python code.
+Ansible and Salt Stack use code generation--and a strongly structured document "playbook", to construct python code.
 Since python is a general purpose language, it handles structured and typed data much better than shell code.
-As a result, powerful modules for system administration, configuration and interaction with web services have made it a formidable automation tool.
+Ansible as a result has become a cornerstone of modern IT automation, provisioning and configuration management;
+many of these problems require working with such data.
 
 1.1. Service-oriented Architecture
 ----------------------------------
@@ -77,10 +90,11 @@ Service-oriented Architectures, or SOA, are modern way to construct, highly avai
 In short, a service oriented architecture is a way for applications to share state and provide services over middleware and structured, serialized objects.
 [@soa]
 One way of transacting states between services is through Representational state transfer, or REST.
-With REST, services are able to share well structured data through document structures like JSON, XML, etc. [@semanticrest]
+With REST, services are able to share well structured data through document structures like JSON, XML and many others. [@semanticrest]
 
-POSIX-shells are completely out of this domain because of their limitations.
-Generally when dealing with web APIs it is recommended to build a general purpose language script instead.
+POSIX-shells are nearly completely useless for interacting with SOAs.
+Generally when dealing with web APIs it is recommended to build a general purpose language script instead;
+If an ansible module exists, that may be another alley of interest.
 
 1.2. Designing and Defining a Domain Languages
 ------------------------------------------------------
@@ -102,14 +116,13 @@ This would be useful for languages built using example strings.
 Some system events may impact other systems.
 Currently, other than using "triggers", there is no way to define listen events in POSIX shells.
 Powershell offers such functionality through the power of its .NET classes [@monadshell].
-
-Currently to accomplish a similar function, one must use a blocking statement like this:
+To accomplish a similar function, one must use a blocking statement like this:
 
 ```sh
 # file descriptor is needed 
 # for performance reasons
 exec <>99 /some/named-pipe
-# consumes a process, must be subshelled.
+# consumes a process, must be backgrounded
 while read -r line; do echo $line; done <&99 &
 echo "event" >&99
 ```
@@ -202,6 +215,9 @@ The machine being used for testing is a Fedora GNU/Linux, release 24, virtual ma
 This hypervisor has a Core i7-3930k processor and 32GB of memory.
 The machine has 2 cores of the 6 physical, reserved for itself, with dynamically resizing memory, up to 16GB.
 To ensure support for the latest features and capabilities, the latest release--as of this writing, v7.1.0, was installed on the machine.
+Interaction with the machine will be done over a network;
+this is accomplished using a remote shell protocol called secure shell (ssh).
+
 
 3. Results
 ==========
@@ -333,13 +349,7 @@ nagios-parser --serialize -o /etc/nagios/nagios.cfg
 All that needs to be done is to make a parser for it.
 Plugins, in a way, are no different from normal shell programs.
 
-3.4. Further Examples
----------------------
-
-  * compare and contrast to various other tools and shells.
-  * benchmarking vs other tools/technologies.
-
-3.5 Final Thought
+3.4 Final Thought
 -----------------
 
   * final word, compare to other shells and systems manipulation technologies.
