@@ -17,7 +17,7 @@ Because of this, it is difficult to use shells for modern text and data handling
 This is especially the case for web oriented services;
 such services heavily rely on transacting structured documents or serialized objects.
 
-This limitation has resulted in the hassle of wrangling various line oriented tools--such as: sed, grep, awk, xargs, tr, paste, cut, tee, etc, to try and derive value and data.
+This limitation has resulted in the hassle of wrangling various line oriented tools such as the following: sed, grep, awk, xargs, tr, paste, cut, tee, etc, to try and derive value and data.
 Thus, in a very contrived way, one has effectively wrote a parser.
 An example of the problem can be seen below[^1].
 
@@ -88,7 +88,7 @@ One that is capable of handling structured data such as JSON, XML, CSV, etc, RES
 ### 1.1.5. Ansible
 
 Tools like Ansible, are not quite shells, but are domain specific languages which solve similar problems.
-Ansible and Salt Stack use code generation--and a strongly structured document "playbook", to construct python code.
+Ansible and Salt Stack use code generation and a strongly structured document--"playbook", to construct python code.
 Since python is a general purpose language, it handles structured and typed data much better than shell code.
 Ansible as a result has become a cornerstone of modern IT automation, provisioning and configuration management;
 many of these problems require working with such data.

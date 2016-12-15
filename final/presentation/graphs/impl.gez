@@ -1,0 +1,25 @@
+digraph impl {
+
+    variables;
+
+    subgraph cluster_variable {
+        label="Javascript Template Literals"
+        line -> out;
+        variables -> out;
+    }
+
+    subgraph cluster_interpreter {
+        label="interpreter";
+        command_1 -> command_2;
+        command_2 -> builtin_1;
+        variables -> builtin_1;
+        builtin_1 -> command_3;
+        command_3 -> etc;
+    }
+
+    readline -> line [label="read input"];
+    out -> parser;
+    parser -> command_1 [lhead=cluster_interpreter label="AST"];
+    etc -> stdout [ltail=cluster_interpreter label="output"];
+    readline -> etc [style=invisible]
+}
