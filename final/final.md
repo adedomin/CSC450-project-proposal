@@ -162,7 +162,7 @@ As a result, many tools and utilities rely on shells to handle and process files
 A collection of standard tools exist to accomplish this goal.
 This collection is called the coreutils.
 Despite the POSIX specification, different coreutils may be implemented with different, nonstandard features and capabilities.
-For instance, many of the GNU coreutils--such as their implementation of grep, df and even readlink, add features not strictly standardized by POSIX which can be seen in [Listing 2](#nonstandard).
+For instance, many of the GNU coreutils--such as their implementation of grep, df and even readlink, add features not strictly standardized by POSIX which can be seen in [Listing 3](#nonstandard).
 
 ~~~{#nonstandard .sh caption="Nonstandard use of POSIX standardized grep"}
 # (?>) is a backreference in PCRE
@@ -191,7 +191,7 @@ This makes it unsuitable as an actual systems shell.
 Some developers have tried to add other structures to shell input, such as Scheme Shell and other implementations [@lispsh].
 Using functional composition, one can construct a very powerful shell, but it will not be as clear and concise as normal shell syntax.
 this is because lisp does not allow for pipelining-like syntax.
-For instance, consider [Listing 3](#lispshell) where one must use a variadic pipe function vs [Listing 4](#shellpipe) which shows a basic pipeline.
+For instance, consider [Listing 4](#lispshell) where one must use a variadic pipe function vs [Listing 5](#shellpipe) which shows a basic pipeline.
 
 ~~~{#lispshell .lisp caption="A lisp shell pipeline"}
 (| 
@@ -242,6 +242,7 @@ Finally a comparison in how many lines of code and characters needed, will be ma
 2. Materials and Methodology
 ============================
 
+
 In order to make use of the technologies described, first the user must have NodeJS.
 The version of node being used on the test machine will be the latest--as of this writing, v7.1.0.
 With NodeJS comes crucial tools like npm.
@@ -267,7 +268,9 @@ For a more up-to-date list, please consult the package.json file in the project 
   * js-yaml - a yaml parser for javascript, for an example plugin
   * various NodeJS built-ins: fs, process, readline, etc.
 
-### 2.3.2. Testing Environments
+### 2.3.2. Testing Environments[^presentation]
+
+[^presentation]: Note in the presentation, testing and development was done soley on a macbook.
 
 The machine being used for testing is a Fedora GNU/Linux, release 24, virtual machine running on a Windows 10 Hyper-V hypervisor.
 This hypervisor has a Core i7-3930k processor and 32GB of memory.
@@ -294,7 +297,7 @@ To accomplish this, the language will offer a plugin system.
 Plugins in this context are merely JavaScript functions which return--or return a value via a callback, JavaScript objects.
 This workflow can be clearly seen in Figure 1, which shows how a user's input line can be saved into a variable.
 Currently, as this figure shows, one can only assign values to variables using the templating engine or a plugin.
-[Listing 5](#varstore) shows, internally, how this storage works in the shell.
+[Listing 6](#varstore) shows, internally, how this storage works in the shell.
 This is normal JavaScript assignment.
 
 ~~~{#varstore .javascript caption="Variable assignment, internal"}
@@ -313,7 +316,7 @@ Ultimately, the variables are stored in one giant JavaScript object.
 This is how JavaScript functions, closures and objects store variables locally.
 Because of this, it simplifies variable storage and management of variables of jcom.
 
-To access these stored variables, as shown in [Listing 6](#varaccess), Variables are accessed using javascript ES6, template literal, syntax.
+To access these stored variables, as shown in [Listing 7](#varaccess), Variables are accessed using javascript ES6, template literal, syntax.
 [Listing 6](#varaccess) also shows counter examples of variable access in bash, the comments in the example delineate the two.
 
 ~~~{#varaccess .javascript caption="Accessing variables in jcom"}
@@ -344,21 +347,19 @@ This opens up possibilities to accomplish more general tasks that normally is le
 
 One feature shells have is the ability to create file descriptors.
 With these, users have a fast way of connecting programs.
-File descriptors is usually how one would recreate--what could best be described, as an event loop.
+File descriptors are usually how one would recreate--what could best be described, as an event loop.
 
-Javascript offers an object called an EventEmitter.
-With it, one can create low coupled software triggered by events.
+NodeJS offers an object called an EventEmitter.
+With it, one can create software with low coupling.
 EventEmitters are very simple, the only two methods that are of importance are on() and emit().
 emit() lets one create an event labeled by a string, to be handled by an on().
 The on() handles events of a particular label with a function.
 
-In the shell, there exists a simple plugin which leverages this power.
-The shell would provide a builtin command, *emit* and *on*.
-The *on* command will take a label and a command as arguments.
-When executed, the system will listen for the label provided.
-
-As a result, when a user calls an *emit* with the correct label, the *on* will be triggered and the command associated with the on will be ran.
-Information can be fed through the *emit* that will flow to the *on* using piping.
+The event system of jcom can be seen in Figure 2.
+The user inputs a command line.
+If the line invokes the on command, it takes the first argument as a label and the second as a command to execute.
+The on command will take the first argument as a label and will invoke the command associated with that label.
+To make these events useful, the emit command accepts an input stream and will feed it into the command.
 
 ~~~{#events .sh caption="jcom event system example"}
 # prints what it is fed
@@ -381,10 +382,10 @@ parse-ini SERVER_CONFIG \
 emit "configChange"
 ~~~
 
-As shown above, these events can be incredibly useful for tasks such as reloading a server when a configuration file is changed.
-It also demonstrates the power of plugins system.
+[Listing 8](#events) shows these events can be incredibly useful for tasks such as reloading a server when a configuration file is changed.
+It also demonstrates the power of the plugin system.
 Users can create plugins to parse their configurations into javascript objects.
-This allows for an easy way to manipulate them and reconstitute them, with changes, back to a file.
+This allows for an easy way to manipulate configurations and reconstitute them, with changes, back to a file.
 
 3.3. Command and File Parsers
 -----------------------------
@@ -393,22 +394,25 @@ This allows for an easy way to manipulate them and reconstitute them, with chang
 
 [^doc]: This shows how commands feed serialized documents and how plugins manipulate the shell's variable pool to store them.
 
-As shown above, the shell can simplify some very common configuration tasks.
-As suggested, many common shell tasks involve handling file data.
-To do simple tasks like modifying configuration files can result in humorous stream processing scripts.
-Similar to how JSON objects have defined schema, many times configuration files have some formal structure.
+As shown in [Listing 8](#events), the shell can simplify some common configuration tasks.
+Many common shell tasks involve handling file data.
+Seemingly simple tasks, like modifying configuration files, usually require the user to open up a text editor and leave the shell.
+Such interactions are generally not possible for automation scripting.
+In order to overcome some of these challenges, Users usually have to do something akin to [Listing 1](#htmlparse) where they string together various commands to parse and transform the file.
+
+Like JSON documents, many times configuration files have some formal structure.
 A common structure is the key:value pattern.
 Usually files have keys and their values and they are separated by a simple equality sign;
-such files are easily handled by tools like grep or sed.
+such files are easily handled by tools like grep and sed.
 
 More advanced configuration structures like ini files, give the user the ability to have single-level nested objects and comments.
 These files can still be easily transformed with basic line oriented tools.
 However, consider rich configuration structures like YAML or even Java .properties files.
 These structures can have infinitely nested objects, arrays and various primitive types.
-Both of these configuration files have type affinity systems.
-These become slightly harder to modify with line oriented tools.
-
-By implementing parsers in javascript, a user could then load it into the shell and begin manipulating it using simple object dot notation.
+Such configuration files become harder to modify with line oriented tools.
+However, consider [Listing 9](#parseconfig).
+Like Figure 3, It shows how one leverages a plugin to read in a file, deserializes it into a jcom variable and how a user can turn this variable into a file via a serialization mechanism.
+This allows one to edit files without resorting to a text editor, opening up opportunities to automate configuration management.
 
 ~~~{#parseconfig .sh caption="jcom parser plugin example"}
 # parse nagios's main configuration
@@ -420,9 +424,6 @@ echo ${NAGIOS.host1}
 ${NAGIOS.host1 = {new obj}} # new host1
 nagios-parser --serialize -o nagios.cfg
 ~~~
-
-All that needs to be done is to make a parser for it.
-Plugins, in a way, are no different from normal shell programs.
 
 4. Discussion
 =============
