@@ -425,6 +425,70 @@ ${NAGIOS.host1 = {new obj}} # new host1
 nagios-parser --serialize -o nagios.cfg
 ~~~
 
+3.4. Outcome, Examples
+----------------------
+
+In this section I will be showing real examples of jcom being used and comparing them to bash examples.
+The purpose of this is to objectively measure if jcom requires less lines of code or number of characters than an equivalent bash script.
+
+### 3.4.1. Example 1
+
+Referring to Figure 4, this simple example shows how to read in a JSON document and accessing data within it.
+One thing to note is how the bash script has to parse the file multiple times in order to store the variables.
+However, both were able to complete the task.
+
+![Example 1](media/example1.png)
+
+### 3.4.2. Example 2
+
+This example, which references Figures 5 and 6, shows an interaction with a webserver.
+The jcom one, Figure 5, shows off its ability to store documents, deserialized, into JavaScript objects.
+Because assignment functionality is not implemented, the noop line shows how one can manipulate and assign values to variables.
+The next lines show off the serialization feature which allows a user to return a variable as a document.
+The variable is then returned to a document, where it is fed into curl so i can be sent to the server.
+The server confirms that the update was successful.
+
+Figure 6 shows an equivalent script written in bash.
+It's mostly the same, the only difference is the use of jq to parse a json string, which is stored in the HOST variable.
+One interesting thing to note is how the HOST json string is modified.
+Some information could have potentially been lost.
+Only name and address are preserved after the modification.
+
+![Example 2 - jcom](media/example2-jcom.png)
+
+![Example 2 - bash](media/example2-bash.png)
+
+### 3.4.3. Example 3
+
+This example, seen in Figure 7, shows how jcom can work with other structured documents.
+This example shows an HTML plugin which allows the user to find information using CSS selectors.
+One thing to note, all of the code in the template string is javascript.
+
+Listing 1 shows the bash counter example.
+This shows that what tools are available strongly affects the outcome for bash.
+This example makes use of a tool called html2--a tool to transform html into greppable lines.
+Because the html was transformed into line friendly output, its possible to use coreutils seen--grep, sed, etc, to obtain the information needed.
+
+![Example 3 - jcom](media/example3-jcom.png)
+
+### 3.4.4. Lines of Code
+
+$$
+\begin{tabular}{lrr}
+    Example & Lines of code & \# of characters \\
+    \hline 
+    jcom example 1 & 2 & 76 \\
+    bash example 1 & 3 & 131 \\
+    jcom example 2 & 5 & 287 \\
+    bash example 2 & 5 & 303 \\
+    jcom example 3 & 4 & 245 \\
+    bash example 3 & 10 & 270 \\
+\end{tabular}
+$$
+
+As can be seen from this table, jcom used less lines of code in examples 1 and 3.
+On every example, jcom used less characters overall.
+
 4. Discussion
 =============
 
