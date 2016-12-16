@@ -383,7 +383,7 @@ These become slightly harder to modify with line oriented tools.
 
 By implementing parsers in javascript, a user could then load it into the shell and begin manipulating it using simple object dot notation.
 
-```sh
+```
 # parse nagios's main configuration
 load nagios-parser
 
@@ -395,6 +395,62 @@ nagios-parser --serialize -o nagios.cfg
 ```
 
 All that needs to be done is to make a parser for it.
-Plugins, in a way, are no different from normal shell programs[^discuss].
+Plugins, in a way, are no different from normal shell programs.
 
-[^discuss]: Discussion component of the paper is pending further results, to be written.
+4. Discussion
+=============
+
+4.1. Significance
+-----------------
+
+The examples, 1 through x, shows a greater level of simplicity and power in handling structured documents.
+It makes use of common dot notation to access methods and member variables in objects.
+This is unlike many shells which can only store simple scalar values or vectors of these values.
+
+Communication with web services--as demonstrated in example x, felt simpler.
+There was no need for complex tools like jq, or line oriented sed transformations, to accomplish the needed updates to the data.
+In order to properly and safely leverage middleware oriented architectures, objects should be in shells.
+
+4.2. Limitations
+----------------
+
+Currently, the shell is not finished.
+For instance, branching is not implemented.
+There are stream related issues which prevent writing to files.
+Assignment and events are currently not implemented as of this revision.
+That being said, assignment can be done using the JavaScript Templating engine.
+    ${ somevar = 'value' }
+Currently the only thing that works is execution pipelining;
+thus many of the examples shown should be runnable.
+
+The JavaScript templating engine sort of blurs the lines of the shell component and JavaScript.
+The templating engine effectively allows the user to execute JavaScript inline.
+It can also slow the engine down since the parser is run after the JavaScript as been evaluated.
+Also, the templating engine makes use of an old JavaScript function which should be avoided, like with();
+with() may be removed in later versions of the language which would slightly complicate variable access as it is currently designed.
+
+Even though the examples 1 through x used less lines of code and less characters used, the difference was not that staggering.
+In many cases jcom only beat out a comparable bash script by 30%.
+It also shows that tools like jq make it possible for bash to work with complex document formats.
+
+4.3 Future Works
+----------------
+
+Currently jcom needs more work.
+Many of the bugs and limitations should be fixed or implemented.
+After that is complete, more complex examples should be developed.
+These examples should try to find things not even a shell can do in a reasonable amount of lines of code.
+By reasonable, three or four times more lines of code than a jcom example.
+
+With better examples and a fully functioning example shell, attempts should be made to add object like features to shells like bash.
+Because shells like bash have such a strong usage, it is hard to fully push it aside.
+For object-like features to become mainstream, they have to implemented in bash.
+Thus the next step would be to fork bash, implement some or all of the features--as were discussed in the results section, and then submit a pull request.
+
+4.4. Conclusion
+---------------
+
+The results show that jcom simplifies some use cases.
+This is a result of the syntax, but also the ability to store complex data structures in the shell's variables.
+Because of this, it feels more natural to use overall.
+It's definitely a feature that should be added to current, or future, shells.
