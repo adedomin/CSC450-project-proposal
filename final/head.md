@@ -18,7 +18,7 @@ title: "jcom: A JavaScript Object Shell"
 abstract: |
     *With the proliferation of JSON representation of data, shells struggle to make use of them; Currently, shell users rely on tools like jq to handle these structured documents.*
     *This paper will discuss an attempt to bring object-like variables to a new shell, jcom.*
-    *The reason was to allow for shells to natively deserialize json-like documents and to work with them using dot-like notation.*
+    *The purpose is to allow for shells to natively deserialize json-like documents and to work with them using dot-like notation.*
     *This resulted in a cleaner way of working with json-like documents.*
     *It also led to less characters being required to solve certain problems.*
     *This research suggests shells, like bash, can greatly benefit by providing such structures in later revisions.*

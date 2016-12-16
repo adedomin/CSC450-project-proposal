@@ -17,9 +17,11 @@ Because of this, it is difficult to use shells for modern text and data handling
 This is especially the case for web oriented services;
 such services heavily rely on transacting structured documents or serialized objects.
 
-This limitation has resulted in the hassle of wrangling various line oriented tools such as the following: sed, grep, awk, xargs, tr, paste, cut, tee, etc, to try and derive value and data.
-Thus, in a very contrived way, one has effectively wrote a parser.
-An example of the problem can be seen in [Listing 1](#htmlparse)[^1].
+Shell users generally have to rely on line oriented tools--like sed, grep, awk, xargs, tr, paste, cut, tee, etc, to try to handle data in structured documents.
+Generally this leads to intricate and fragile parsers.
+[Listing 1](#htmlparse)[^1] demonstrates this problem.
+Listing 1 shows common way to handle html files in bash.
+The script makes use of various line oriented tools to find the top three results from a serach engine.
 
 [^1]: source: <https://github.com/GeneralUnRest/neo8ball-irc/blob/master/lib/search.sh>
 
@@ -51,15 +53,16 @@ Many projects, some more serious than others, attempted to solve this data-wrang
 
 Shells are very powerful tools.
 In many cases, they also serve as the most basic ui of an operating system.
-Most shells allow for tying streams of multiple processes togethet, allowing for interprocess communication.
+Most shells allow for tying streams of multiple processes together, allowing for interprocess communication.
 Such mechanisms is what allows shells to complete complex tasks.
 Because of this, many programming languages provide the ability to spawn shells.
 An example is the function system(), in the standard C library.
+
 The power of the shell was not lost to some OCaml[^ocaml] developers;
 these developers created shcaml.
 shcaml, a library, offers a more powerful shell spawning construct for the OCaml language.
 A feature of shcaml allowed one to tie OCaml code with external commands as a sort of intermediate go-between.
-This allowed for powerful data-wrangling functional compositions that could  take in data from shell commands and transform them into structured outputs [@shcaml].
+This allowed for powerful data-wrangling functional compositions that could take in data from shell commands and transform them into structured outputs [@shcaml].
 
 [^ocaml]: OCaml is a popular functional language.
 
@@ -67,13 +70,12 @@ This allowed for powerful data-wrangling functional compositions that could  tak
 
 Another way of attaining structured inputs and outputs is through an object system.
 One attempt at object oriented shells utilized named pipes and file descriptors to mimic objects [@oosh].
-This resulted in a new process for every object; which created object encapsulation.
+This resulted in a new process for every object; the individual processes had their own internal state, mimicking object encapsulation.
 
-Each object still has limitations in terms of functionality;
-They are basically just another shell with its own encapsulated data.
-As a result, each object requires its own process, so large number of objects requires large amounts of processes.
+These objects had many faults, however.
+Each object was basically its own shell, still requiring users to build complex scripts.
 Named pipes are not as secure as other means of interprocess communication;
-This is because anyone with the same user privileges can write to and read from named pipes.
+this is because anyone with the same user privileges can write to and read from named pipes.
 
 ### 1.1.3. Lisp Shells
 
@@ -98,16 +100,14 @@ This framework comes with a handful of features, like the capability of handling
 Tools like Ansible, are not quite shells, but are domain specific languages which solve similar problems.
 Ansible and Salt Stack use code generation and structured document format called yaml, to construct python code.
 Since python is a general purpose language, it handles structured and typed data much better than shell code.
-Ansible as a result has become a cornerstone of modern IT automation, provisioning and configuration management;
-many of those listed problems require working with such data.
+Ansible, as a result, has become a cornerstone of modern IT automation, provisioning and configuration management;
 
 The next few sections will cover some background on important topics and issues around this space, basically what these prior works tried to solve.
-Thus the next sections convey the problem that is being solved.
 
 1.2. Service-oriented Architecture
 ----------------------------------
 
-Service-oriented Architectures, or SOA, are modern way to construct, highly available, data rich web applications.
+Service-oriented Architectures, or SOA, are modern ways to construct, highly available, data rich web applications.
 In short, a service oriented architecture is a way for applications to share state and provide services over middleware and structured, serialized objects.
 [@soa]
 One way of transacting states between services is through Representational state transfer, or REST.
@@ -152,8 +152,6 @@ done <&99 &
 echo "event" >&99
 ~~~
 
-Given that package management tools, used in many linux distributions, use shell like scripting, and have a post-install process, it may be helpful for a user to define his own post-install event handlers or notifiers.
-
 1.5. Portability Concerns
 -------------------------
 
@@ -191,7 +189,7 @@ This makes it unsuitable as an actual systems shell.
 Some developers have tried to add other structures to shell input, such as Scheme Shell and other implementations [@lispsh].
 Using functional composition, one can construct a very powerful shell, but it will not be as clear and concise as normal shell syntax.
 this is because lisp does not allow for pipelining-like syntax.
-For instance, consider [Listing 4](#lispshell) where one must use a variadic pipe function vs [Listing 5](#shellpipe) which shows a basic pipeline.
+For instance, consider [Listing 4](#lispshell) where one must use a variadic pipe function versus [Listing 5](#shellpipe) which shows a basic pipeline.
 
 ~~~{#lispshell .lisp caption="A lisp shell pipeline"}
 (| 
@@ -207,8 +205,7 @@ cat somefile | some-command
 
 The named-pipe shell would simply be too slow.
 The need to spawn new processes for each object and dealing with potentially slow named pipe interaction is too heavy [@oosh].
-One can used file descriptors trick to enhance the performance of named pipes.
-
+Some performance can be gained using the file descriptor trick shown in Listing 2, however.
 
 1.7 Objective
 --------------
@@ -221,9 +218,7 @@ The shell should keep with traditional POSIX shell syntax as much as possible, b
 Ideally it should be fast, but since it will be written in a scripting language, this may be unattainable in this current project.
 To extend the shell's functionality, it is necessary that it have a plugin system.
 The plugin system will allow for added features and capabilities.
-
-Ultimately, the goal is to see what a shell with objects can do.
-It is the goal of this research not only to build a shell, but to also observe the positive utility and advantage of the shell being developed.
+It is the goal of this research not only to build a shell, but to also observe if the features enhance readability and conciseness.
 
 1.8. Summary of Results
 -----------------------
@@ -235,7 +230,7 @@ Other examples, such as use cases and the plugin system will be demonstrated.
 
 The final section will show real uses of the shell.
 This will include code examples, one in jcom and one in bash.
-Finally a comparison in how many lines of code and characters needed, will be made.
+The results will conclude with a table that will show if jcom requires less code overall--as measured by lines of code and number of characters, than bash.
 
 [^progress]: As of this revision, some features like events are not implemented.
 
@@ -249,12 +244,12 @@ With NodeJS comes crucial tools like npm.
 npm is the tool that handles dependencies;
 The project makes use of such dependencies like pegjs.
 When downloading the source of the project from github.
-It is necessary to run npm install to require dependencies.
+It is necessary to run *npm install* to require dependencies.
 
 The project is version controlled using git and is hosted on a remote repository on github[^git].
 The easiest way to check out the project would be to clone it using a git utility.
 npm can also download the latest build of the project given the url in the footer;
-this is done by typing npm install url.
+this is done by typing *npm install url*.
 
 [^git]: Source: <https://github.com/adedomin/jcom>. You can Acquire the source using: git clone <https://github.com/adedomin/jcom>
 
@@ -263,14 +258,14 @@ this is done by typing npm install url.
 The project makes use of the following libraries.
 For a more up-to-date list, please consult the package.json file in the project which lists all the dependencies and their semver version number:
 
-  * pegjs - parser generator
+  * pegjs - parser generator.
   * lodash - utility functions for functional array and object handling.
-  * js-yaml - a yaml parser for javascript, for an example plugin
+  * js-yaml - a yaml parser for javascript, for an example plugin.
   * various NodeJS built-ins: fs, process, readline, etc.
 
 ### 2.3.2. Testing Environments[^presentation]
 
-[^presentation]: Note in the presentation, testing and development was done soley on a macbook.
+[^presentation]: Note in the presentation, testing and development was done on a Macbook Pro 11,1.
 
 The machine being used for testing is a Fedora GNU/Linux, release 24, virtual machine running on a Windows 10 Hyper-V hypervisor.
 This hypervisor has a Core i7-3930k processor and 32GB of memory.
@@ -279,7 +274,7 @@ To ensure support for the latest features and capabilities, the latest release--
 Interaction with the machine will be done over a network;
 this is accomplished using a remote shell protocol called secure shell (ssh).
 
-Any and all scripts necessary to reproduce the results will be made available in the github link provided in the footer.
+Any and all scripts necessary to reproduce the results will be made available in the github link provided.
 Please consult the examples/ directory in the repository.
 
 3. Results
@@ -314,9 +309,9 @@ SHELL_VARS[ident2] = xpathSelector(
 
 Ultimately, the variables are stored in one giant JavaScript object.
 This is how JavaScript functions, closures and objects store variables locally.
-Because of this, it simplifies variable storage and management of variables of jcom.
+Because of this, it simplifies variable storage and management of variables in jcom.
 
-To access these stored variables, as shown in [Listing 7](#varaccess), Variables are accessed using javascript ES6, template literal, syntax.
+To access these stored variables, as shown in [Listing 7](#varaccess), Variables are accessed using JavaScript ES6 template-literal syntax.
 [Listing 6](#varaccess) also shows counter examples of variable access in bash, the comments in the example delineate the two.
 
 ~~~{#varaccess .javascript caption="Accessing variables in jcom"}
@@ -336,7 +331,7 @@ ${somevar.someotherobj.somekey.moreobjs}
 ~~~
 
 Again, as shown in the above example, javascript notation and variable storage opens up an avenue to handle various kinds of data.
-This opens up possibilities to accomplish more general tasks that normally is left to general scripting languages[^exlangs].
+This opens up possibilities to accomplish more tasks that are normally left to general scripting languages[^exlangs].
 
 3.2. Events
 -----------
@@ -345,9 +340,9 @@ This opens up possibilities to accomplish more general tasks that normally is le
 
 [^event]: This shows how the event system works by registering commands or daemons to labels and invoking or feeding more data into them using an accompanied emit.
 
-One feature shells have is the ability to create file descriptors.
-With these, users have a fast way of connecting programs.
-File descriptors are usually how one would recreate--what could best be described, as an event loop.
+Shells have the ability to create file descriptors.
+With these, users have a fast way of connecting programs' input and output streams together.
+File descriptors are usually how one would recreate--what could best be described, as an event loop; this is shown in Listing 2.
 
 NodeJS offers an object called an EventEmitter.
 With it, one can create software with low coupling.
@@ -357,9 +352,10 @@ The on() handles events of a particular label with a function.
 
 The event system of jcom can be seen in Figure 2.
 The user inputs a command line.
-If the line invokes the on command, it takes the first argument as a label and the second as a command to execute.
-The on command will take the first argument as a label and will invoke the command associated with that label.
-To make these events useful, the emit command accepts an input stream and will feed it into the command.
+If the line invokes the *on* command, it takes the first argument as a label and the second as a command to execute.
+The *emit* command will take the first argument as a label and will invoke the command associated with that label;
+the command, with the label, was defined by the *on* command previously.
+To make these events useful, the *emit* command accepts an input stream and will feed it into the command.
 
 ~~~{#events .sh caption="jcom event system example"}
 # prints what it is fed
@@ -397,7 +393,7 @@ This allows for an easy way to manipulate configurations and reconstitute them, 
 As shown in [Listing 8](#events), the shell can simplify some common configuration tasks.
 Many common shell tasks involve handling file data.
 Seemingly simple tasks, like modifying configuration files, usually require the user to open up a text editor and leave the shell.
-Such interactions are generally not possible for automation scripting.
+Text editor interactions generally cannot be scripted, at least not easily.
 In order to overcome some of these challenges, Users usually have to do something akin to [Listing 1](#htmlparse) where they string together various commands to parse and transform the file.
 
 Like JSON documents, many times configuration files have some formal structure.
@@ -408,10 +404,10 @@ such files are easily handled by tools like grep and sed.
 More advanced configuration structures like ini files, give the user the ability to have single-level nested objects and comments.
 These files can still be easily transformed with basic line oriented tools.
 However, consider rich configuration structures like YAML or even Java .properties files.
-These structures can have infinitely nested objects, arrays and various primitive types.
-Such configuration files become harder to modify with line oriented tools.
+These structures can have an infinite number of nested objects, arrays and various primitive types.
+Because of this, Such configuration files become harder to modify with line oriented tools.
 However, consider [Listing 9](#parseconfig).
-Like Figure 3, It shows how one leverages a plugin to read in a file, deserializes it into a jcom variable and how a user can turn this variable into a file via a serialization mechanism.
+Like Figure 3, It shows how users can leverage a plugin to read in a file, deserializes it into a jcom variable and how a user can turn this variable into a file--with changes if applicable, via a serialization mechanism.
 This allows one to edit files without resorting to a text editor, opening up opportunities to automate configuration management.
 
 ~~~{#parseconfig .sh caption="jcom parser plugin example"}
@@ -428,21 +424,21 @@ nagios-parser --serialize -o nagios.cfg
 3.4. Outcome, Examples
 ----------------------
 
-In this section I will be showing real examples of jcom being used and comparing them to bash examples.
-The purpose of this is to objectively measure if jcom requires less lines of code or number of characters than an equivalent bash script.
+This section will show real examples of jcom being used.
+These uses will be directly compared to equivalent bash implementations.
+The purpose of this is to objectively measure if jcom requires less lines of code, or number of characters, than an equivalent bash script.
 
 ### 3.4.1. Example 1
 
 Referring to Figure 4, this simple example shows how to read in a JSON document and accessing data within it.
 One thing to note is how the bash script has to parse the file multiple times in order to store the variables.
-However, both were able to complete the task.
 
 ![Example 1](media/example1.png)
 
 ### 3.4.2. Example 2
 
 This example, which references Figures 5 and 6, shows an interaction with a webserver.
-The jcom one, Figure 5, shows off its ability to store documents, deserialized, into JavaScript objects.
+The jcom one, Figure 5, shows off its ability to store documents, deserialized, into jcom objects.
 Because assignment functionality is not implemented, the noop line shows how one can manipulate and assign values to variables.
 The next lines show off the serialization feature which allows a user to return a variable as a document.
 The variable is then returned to a document, where it is fed into curl so i can be sent to the server.
