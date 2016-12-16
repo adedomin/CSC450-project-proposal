@@ -19,17 +19,17 @@ such services heavily rely on transacting structured documents or serialized obj
 
 This limitation has resulted in the hassle of wrangling various line oriented tools such as the following: sed, grep, awk, xargs, tr, paste, cut, tee, etc, to try and derive value and data.
 Thus, in a very contrived way, one has effectively wrote a parser.
-An example of the problem can be seen below[^1].
+An example of the problem can be seen in [Listing 1](#htmlparse)[^1].
 
 [^1]: source: <https://github.com/GeneralUnRest/neo8ball-irc/blob/master/lib/search.sh>
 
-```sh
+~~~{#htmlparse .sh caption="Parsing HTML in bash"}
 # gets an html webpage from duckduckgo, 
 # processes it into
 # "url - page description" lines 
 # removes ad links
 # and only preserves the first three
-curl ${SEARCH_ENGINE}$(rawurlencode ${4}) | \
+curl ${SEARCH_ENGINE}${4} | \
 html2 | \
 grep -A 2 "@class=result__a" | \
 sed '/^--$/d' | \
@@ -39,7 +39,7 @@ paste -d " " - - | \
 sed 's/\(@href\|b\)=//g' | \
 sed '/r\.search\.yahoo\.com/d' | \
 head -n 3
-```
+~~~
 
 1.1. Related Works
 ------------------
@@ -49,52 +49,60 @@ Many projects, some more serious than others, attempted to solve this data-wrang
 
 ### 1.1.1. shcaml
 
-Shells have very powerful uses;
-this is why most systems use a shell as the most basic UI for interacting with a operating system.
-Sometimes it's ideal to use these features to handle interprocess communication. 
-This is also why many programming languages provide  the ability to spawn shells--functions like system(), in the standard library.
-The power of the shell was not lost to some OCaml--a functional language, developers;
-these developers created, shcaml.
-This library offered a more powerful shell spawning construct for the OCaml language.
-One such feature of the library gave the user the ability to utilize OCaml functions as a go-between two programs.
-This allowed for powerful data-wrangling functional compositions that could take in data from shells and output or exchange structured documents [@shcaml].
+Shells are very powerful tools.
+In many cases, they also serve as the most basic ui of an operating system.
+Most shells allow for tying streams of multiple processes togethet, allowing for interprocess communication.
+Such mechanisms is what allows shells to complete complex tasks.
+Because of this, many programming languages provide the ability to spawn shells.
+An example is the function system(), in the standard C library.
+The power of the shell was not lost to some OCaml[^ocaml] developers;
+these developers created shcaml.
+shcaml, a library, offers a more powerful shell spawning construct for the OCaml language.
+A feature of shcaml allowed one to tie OCaml code with external commands as a sort of intermediate go-between.
+This allowed for powerful data-wrangling functional compositions that could  take in data from shell commands and transform them into structured outputs [@shcaml].
+
+[^ocaml]: OCaml is a popular functional language.
 
 ### 1.1.2. Named Pipe Shells
 
 Another way of attaining structured inputs and outputs is through an object system.
-One attempt at object oriented shells attempted to make use of named pipes and file descriptors to mimic objects [@oosh].
-This resulted in a new process for every object; this comes with great performance cost.
-Each object still has limitations in terms of functionality.
+One attempt at object oriented shells utilized named pipes and file descriptors to mimic objects [@oosh].
+This resulted in a new process for every object; which created object encapsulation.
+
+Each object still has limitations in terms of functionality;
 They are basically just another shell with its own encapsulated data.
-It also incurs security risks since processes can write and listen to the objects' named pipes.
+As a result, each object requires its own process, so large number of objects requires large amounts of processes.
+Named pipes are not as secure as other means of interprocess communication;
+This is because anyone with the same user privileges can write to and read from named pipes.
 
 ### 1.1.3. Lisp Shells
 
-Lisp--another functional like language, shells have been other ways of trying to add ;
-examples are like Scheme Shell, and other toy, academic ones [@shcaml][@lispsh].
+Lisp--another language that is function-oriented, shells have been other ways of trying to add structure.
+examples are like Scheme Shell, and other academic ones [@shcaml][@lispsh].
 The advantage lisp gives over other languages, which makes it suitable for shells, is that the program and data have the same form [@lispsh];
-this comes in handy in meta programming, where programs can dynamically change to handle certain data.
-It is also a closed language, as in, one can pull from data that is in an outer function.
+lisp code is effectively a mutable abstract syntax tree.
+This property comes in handy in meta programming, where programs can dynamically change to handle certain data.
+It is also a closed language, as in, one can pull from data that is in an outer functions.
 Closure property is what gives lisp its ability to resemble structured documents.
-In a way, one can make a lisp-like dialect using JSON.
+Since lisp code is already in a abstract syntax tree form, JSON documents can represent lisp code.
 
 ### 1.1.4. Powershell
 
 Projects like Powershell are built on the .NET runtime and can thus utilize all of the language features therein.
 The streaming pipelines in Powershell are merely .NET classes which allow for some structural correctness and parsing [@shcaml][@monadshell].
-As a result, Microsoft prefers to call more than just a shell, but a whole "automation and configuration management framework."
-One that is capable of handling structured data such as JSON, XML, CSV, etc, REST APIs, and object models.
+As a result, Microsoft prefers to call it more than just a shell, but a whole "automation and configuration management framework."
+This framework comes with a handful of features, like the capability of handling structured data such as JSON, XML, CSV, etc, REST APIs, and object models.
 
 ### 1.1.5. Ansible
 
 Tools like Ansible, are not quite shells, but are domain specific languages which solve similar problems.
-Ansible and Salt Stack use code generation and a strongly structured document--"playbook", to construct python code.
+Ansible and Salt Stack use code generation and structured document format called yaml, to construct python code.
 Since python is a general purpose language, it handles structured and typed data much better than shell code.
 Ansible as a result has become a cornerstone of modern IT automation, provisioning and configuration management;
-many of these problems require working with such data.
+many of those listed problems require working with such data.
 
-The next few sections will cover some background on important topics and issues.
-It is necessary to convey the importance of the project as a whole.
+The next few sections will cover some background on important topics and issues around this space, basically what these prior works tried to solve.
+Thus the next sections convey the problem that is being solved.
 
 1.2. Service-oriented Architecture
 ----------------------------------
@@ -105,9 +113,11 @@ In short, a service oriented architecture is a way for applications to share sta
 One way of transacting states between services is through Representational state transfer, or REST.
 With REST, services are able to share well structured data through document structures like JSON, XML and many others. [@semanticrest]
 
-POSIX-shells are nearly completely useless for interacting with SOAs.
-Generally when dealing with web APIs it is recommended to build a general purpose language script instead;
-If an ansible module exists, that may be another alley of interest.
+POSIX-shells, on their own, are completely useless for interacting with service oriented architectures.
+Generally when dealing with web APIs it is recommended to build a script--using a general purpose language[^exlangs], instead.
+If an ansible module exists, one might want to consider that as well.
+
+[^exlangs]: Examples: Python, JavaScript, Perl, Ruby.
 
 1.3. Designing and Defining a Domain Languages
 ----------------------------------------------
@@ -119,9 +129,9 @@ This process makes use of advanced features of UML version 2.1.
 This also has the added benefit of code generation.
 
 Defining a language is ultimately the process of creating formal grammars.
-Generally this is done empirically, as in from experience and trial and error.
+Generally this is done empirically, basically from experience, trial and error.
 Some have used machine learning and bottom-up CYK based parsers to generate grammar [@synthcfg].
-This would be useful for languages built using example strings.
+This would be useful for languages built using example strings of unknown structure than more well defined languages.
 
 1.4. Events
 -----------
@@ -129,33 +139,39 @@ This would be useful for languages built using example strings.
 Some system events may impact other systems.
 Currently, other than using triggers, there is no way to define listen events in POSIX shells.
 Powershell offers such functionality through the power of its .NET classes [@monadshell].
-To accomplish a similar function, one must use a blocking statement like this:
+To accomplish a similar function, one must use a blocking statement such as one shown in [Listing 2](#event)
 
-```sh
+~~~{#event .sh caption="Event driven programming in a shell"}
 # file descriptor is needed 
 # for performance reasons
 exec <>99 /some/named-pipe
 # consumes a process, must be backgrounded
-while read -r line; do echo $line; done <&99 &
+while read -r line; do 
+    echo $line 
+done <&99 &
 echo "event" >&99
-```
+~~~
 
-Given that package management tools used in many linux distributions use shell like scripting, and have a post-install process, it may be helpful for a user to define his own post-install event handlers or notifiers.
+Given that package management tools, used in many linux distributions, use shell like scripting, and have a post-install process, it may be helpful for a user to define his own post-install event handlers or notifiers.
 
 1.5. Portability Concerns
 -------------------------
 
 Shells are the primary interface into a POSIX system.
 As a result, many tools and utilities rely on shells to handle and process files and their data.
+A collection of standard tools exist to accomplish this goal.
+This collection is called the coreutils.
+Despite the POSIX specification, different coreutils may be implemented with different, nonstandard features and capabilities.
+For instance, many of the GNU coreutils--such as their implementation of grep, df and even readlink, add features not strictly standardized by POSIX which can be seen in [Listing 2](#nonstandard).
 
-Even using different coreutils can lead to issues.
-For instance, many of the GNU coreutils--such as their implementation of grep and df, add features not strictly standardized by POSIX. An example:
-
-```sh
+~~~{#nonstandard .sh caption="Nonstandard use of POSIX standardized grep"}
+# (?>) is a backreference in PCRE
+# -P flag enables PCRE grep 
+# in the GNU coreutils
 grep -P '(?>=)somepat' file 
 # does not work on macOS, which uses, 
 # mostly, BSD coreutils
-```
+~~~
 
 Different operating systems--ranging from GNU-based Linux distributions, The BSDs and other non-free systems like macOS, Solaris, AIX, and other UNIX, can potentially use different coreutils.
 Thus, this means that shells scripts can depend on behaviors and unstructured output that are not portable.
@@ -166,8 +182,8 @@ Thus, this means that shells scripts can depend on behaviors and unstructured ou
 ### 1.6.1. Interactively
 
 An OCaml library called shcaml added functional combinators called shtreams which allow for transforming byte streams into structured documents [@shcaml].
-However, it is merely a library.
-It has no use interactively.
+However, it is merely a library, to be used in making OCaml programs.
+It was not intended to be used interactively.
 This makes it unsuitable as an actual systems shell.
 
 ### 1.6.2 Readability
@@ -175,22 +191,23 @@ This makes it unsuitable as an actual systems shell.
 Some developers have tried to add other structures to shell input, such as Scheme Shell and other implementations [@lispsh].
 Using functional composition, one can construct a very powerful shell, but it will not be as clear and concise as normal shell syntax.
 this is because lisp does not allow for pipelining-like syntax.
-For instance, consider this simple example and scale it out:
+For instance, consider [Listing 3](#lispshell) where one must use a variadic pipe function vs [Listing 4](#shellpipe) which shows a basic pipeline.
 
-```lisp
+~~~{#lispshell .lisp caption="A lisp shell pipeline"}
 (| 
   (cat somefile)
   (some-command))
-```
+~~~
 
-```sh
+~~~{#lispshell .sh caption="Shell pipeline"}
 cat somefile | some-command
-```
+~~~
 
 ### 1.6.3. Performance
 
 The named-pipe shell would simply be too slow.
 The need to spawn new processes for each object and dealing with potentially slow named pipe interaction is too heavy [@oosh].
+One can used file descriptors trick to enhance the performance of named pipes.
 
 
 1.7 Objective
@@ -199,14 +216,14 @@ The need to spawn new processes for each object and dealing with potentially slo
 Given all the above, the goal is to build a new shell.
 This shell should be able to execute simple commands and offer basic shell features like pipelining.
 To differentiate it from other shells, it should be able directly work and manipulate modern data structures and documents like JSON.
-The shell should be fully interactive, like a normal shell is.
-The shell should keep with the traditional syntax as much as possible, both for readability concerns, but also for familiarity.
-Ideally it should be fast, but since it will be written in a scripting language, this might not be fully attainable.
+The shell should be fully interactive, like a shell is suppose to be.
+The shell should keep with traditional POSIX shell syntax as much as possible, both for readability concerns, but also for familiarity.
+Ideally it should be fast, but since it will be written in a scripting language, this may be unattainable in this current project.
 To extend the shell's functionality, it is necessary that it have a plugin system.
 The plugin system will allow for added features and capabilities.
 
 Ultimately, the goal is to see what a shell with objects can do.
-It is the goal of this research not only to build a shell, but to also observe the positive utility and advantage of a shell.
+It is the goal of this research not only to build a shell, but to also observe the positive utility and advantage of the shell being developed.
 
 1.8. Summary of Results
 -----------------------
@@ -216,7 +233,11 @@ The paper will discuss how the program stores variables, including objects, or d
 It will also show examples of usage, both manipulating and using variables.
 Other examples, such as use cases and the plugin system will be demonstrated.
 
-[^progress]: note that the features as described are purely conceptual at this stage.
+The final section will show real uses of the shell.
+This will include code examples, one in jcom and one in bash.
+Finally a comparison in how many lines of code and characters needed, will be made.
+
+[^progress]: As of this revision, some features like events are not implemented.
 
 2. Materials and Methodology
 ============================
@@ -230,23 +251,23 @@ When downloading the source of the project from github.
 It is necessary to run npm install to require dependencies.
 
 The project is version controlled using git and is hosted on a remote repository on github[^git].
-To check out the project, it would be advised to have a git client.
+The easiest way to check out the project would be to clone it using a git utility.
 npm can also download the latest build of the project given the url in the footer;
 this is done by typing npm install url.
 
-[^git]: Source: https://github.com/adedomin/jcom
+[^git]: Source: <https://github.com/adedomin/jcom>. You can Acquire the source using: git clone <https://github.com/adedomin/jcom>
 
 ### 2.3.1. Libraries
 
 The project makes use of the following libraries.
-For a more up-to-date list, please consult the package.JSON file in the project which lists all the dependencies and their semver version number:
+For a more up-to-date list, please consult the package.json file in the project which lists all the dependencies and their semver version number:
 
   * pegjs - parser generator
   * lodash - utility functions for functional array and object handling.
   * js-yaml - a yaml parser for javascript, for an example plugin
   * various NodeJS built-ins: fs, process, readline, etc.
 
-### 2.3.2. Testing Envrionment
+### 2.3.2. Testing Environments
 
 The machine being used for testing is a Fedora GNU/Linux, release 24, virtual machine running on a Windows 10 Hyper-V hypervisor.
 This hypervisor has a Core i7-3930k processor and 32GB of memory.
@@ -258,7 +279,6 @@ this is accomplished using a remote shell protocol called secure shell (ssh).
 Any and all scripts necessary to reproduce the results will be made available in the github link provided in the footer.
 Please consult the examples/ directory in the repository.
 
-
 3. Results
 ==========
 
@@ -269,29 +289,34 @@ Please consult the examples/ directory in the repository.
 
 [^vars]: This shows how one makes use of variables and the ways to get and set them.
 
-The main object of the project is to process structured documents.
+The main objective of the project is to process structured documents.
 To accomplish this, the language will offer a plugin system.
-Plugins in this context are merely javascript functions which return--or return a value via a callback, javascript objects.
+Plugins in this context are merely JavaScript functions which return--or return a value via a callback, JavaScript objects.
+This workflow can be clearly seen in Figure 1, which shows how a user's input line can be saved into a variable.
+Currently, as this figure shows, one can only assign values to variables using the templating engine or a plugin.
+[Listing 5](#varstore) shows, internally, how this storage works in the shell.
+This is normal JavaScript assignment.
 
-```javascript
+~~~{#varstore .javascript caption="Variable assignment, internal"}
 // store some input or output buffer
 // parsed by a plugin named parseJson
 SHELL_VARS[ident] = parseJson(buffer)
-// a plugin that uses xpath to select some
-// values from an XML document and stores it
-SHELL_VARS[ident2] = xpathSelector(buffer, args)
-```
+// a plugin that uses xpath to 
+// select some values from an 
+// XML document and stores it
+SHELL_VARS[ident2] = xpathSelector(
+    buffer, args
+)
+~~~
 
-Ultimately, the variables are stored in one giant associative arrays.
-This is a common practice for storing variables.
-Python objects use dictionaries to keep track of their variables.
-This simplifies the management of the system.
-The only limitation is that it can only store un-typed javascript objects, such as Strings, Numbers, Objects and associative arrays (objects without functions).
+Ultimately, the variables are stored in one giant JavaScript object.
+This is how JavaScript functions, closures and objects store variables locally.
+Because of this, it simplifies variable storage and management of variables of jcom.
 
-Accessing Variables are accessed using javascript notations encapsulated in template literal-like syntax.
-This integrates well with the Javascript virtual machine and is likely cleaner than bash or other shells.
+To access these stored variables, as shown in [Listing 6](#varaccess), Variables are accessed using javascript ES6, template literal, syntax.
+[Listing 6](#varaccess) also shows counter examples of variable access in bash, the comments in the example delineate the two.
 
-```javascript
+~~~{#varaccess .javascript caption="Accessing variables in jcom"}
 // getting an array element from an object
 ${somevar.somearr[1]}
 // bash does not have nested objects
@@ -299,14 +324,16 @@ ${somevar[1]}
 // iterate over every element in an array
 ${somevar.forEach(var => do something)}
 // bash
-for var in ${somevar[@]}; do something; done
+for var in ${somevar[@]}; do 
+    something
+done
 // NESTED OBJECTS
 // not possible in bash as of v4.3
-${somevar.someotherobj.somekey.moreobjs.etc}
-```
+${somevar.someotherobj.somekey.moreobjs}
+~~~
 
 Again, as shown in the above example, javascript notation and variable storage opens up an avenue to handle various kinds of data.
-This opens up possibilities to accomplish more general tasks that normally is left to general scripting languages like perl, python, ruby or even javascript with Nodejs.
+This opens up possibilities to accomplish more general tasks that normally is left to general scripting languages[^exlangs].
 
 3.2. Events
 -----------
@@ -333,7 +360,7 @@ When executed, the system will listen for the label provided.
 As a result, when a user calls an *emit* with the correct label, the *on* will be triggered and the command associated with the on will be ran.
 Information can be fed through the *emit* that will flow to the *on* using piping.
 
-```sh
+~~~{#events .sh caption="jcom event system example"}
 # prints what it is fed
 on 'echo' cat
 # will print hello, world
@@ -352,7 +379,7 @@ parse-ini SERVER_CONFIG \
     --serialize -o /etc/server_config
 # reload changed config
 emit "configChange"
-```
+~~~
 
 As shown above, these events can be incredibly useful for tasks such as reloading a server when a configuration file is changed.
 It also demonstrates the power of plugins system.
@@ -383,7 +410,7 @@ These become slightly harder to modify with line oriented tools.
 
 By implementing parsers in javascript, a user could then load it into the shell and begin manipulating it using simple object dot notation.
 
-```
+~~~{#parseconfig .sh caption="jcom parser plugin example"}
 # parse nagios's main configuration
 load nagios-parser
 
@@ -392,7 +419,7 @@ nagios-parser --to-var NAGIOS nagios.cfg
 echo ${NAGIOS.host1}
 ${NAGIOS.host1 = {new obj}} # new host1
 nagios-parser --serialize -o nagios.cfg
-```
+~~~
 
 All that needs to be done is to make a parser for it.
 Plugins, in a way, are no different from normal shell programs.
@@ -437,14 +464,15 @@ It also shows that tools like jq make it possible for bash to work with complex 
 ----------------
 
 Currently jcom needs more work.
-Many of the bugs and limitations should be fixed or implemented.
+Many of the bugs and features should be fixed or implemented.
 After that is complete, more complex examples should be developed.
-These examples should try to find things not even a shell can do in a reasonable amount of lines of code.
-By reasonable, three or four times more lines of code than a jcom example.
+These examples should try to find things not even a shell can do in a reasonable amount of lines of code[^sig_line].
+
+[^sig_line]: By reasonable, I mean three or four times more lines of code than a jcom example.
 
 With better examples and a fully functioning example shell, attempts should be made to add object like features to shells like bash.
-Because shells like bash have such a strong usage, it is hard to fully push it aside.
-For object-like features to become mainstream, they have to implemented in bash.
+Because shells like bash have a large userbase, it is hard to fully deprecate it.
+Because of this, for object-like features to become mainstream, they have to implemented in bash.
 Thus the next step would be to fork bash, implement some or all of the features--as were discussed in the results section, and then submit a pull request.
 
 4.4. Conclusion
@@ -453,4 +481,4 @@ Thus the next step would be to fork bash, implement some or all of the features-
 The results show that jcom simplifies some use cases.
 This is a result of the syntax, but also the ability to store complex data structures in the shell's variables.
 Because of this, it feels more natural to use overall.
-It's definitely a feature that should be added to current, or future, shells.
+The next step is to try and push these modern features into current, popular shells.

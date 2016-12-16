@@ -1,5 +1,5 @@
 DOC=pandoc
-DOCFLAGS=--filter pandoc-citeproc --csl=./ieee-with-url-and-doi.csl --self-contained
+DOCFLAGS=--filter pandoc-citeproc --csl=./ieee-with-url-and-doi.csl --self-contained --listing
 DOCNAME=CSC450-SEN-dedominica
 DOCTYPE=pdf
 DOCOBJ=final.md
